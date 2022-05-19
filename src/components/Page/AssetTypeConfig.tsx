@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
-import { useAssetDefinitions, useInvalidateAssetDefinitions, useIsAdmin } from "../../hooks";
+import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
+import { useAssetClassificationService, useAssetDefinitions, useInvalidateAssetDefinitions, useIsAdmin } from "../../hooks";
 import { EntityDetail, FeeDestination, newDefinition, newEntityDetail, newVerifier, QueryAssetDefinitionResponse, VerifierDetail } from "../../models";
 import { H3, H4, H5 } from "../Headers";
 import styled from 'styled-components'
@@ -15,7 +15,6 @@ import { Modal } from "../Modal";
 import { TwoColumnFlex } from "../Layout";
 
 interface AssetTypeConfigProps {
-
 }
 
 export const AssetTypeConfig: FunctionComponent<AssetTypeConfigProps> = () => {
@@ -27,6 +26,9 @@ export const AssetTypeConfig: FunctionComponent<AssetTypeConfigProps> = () => {
     const { walletConnectService: wcs, walletConnectState } = useWalletConnect()
 
     const [addingDefinition, setAddingDefinition] = useState<QueryAssetDefinitionResponse | null>(null)
+    const service = useAssetClassificationService()
+
+    console.log('hi, here')
 
     const handleTransaction = async (message: string) => {
         console.log("handling transaction", message)
@@ -69,8 +71,8 @@ export const AssetTypeConfig: FunctionComponent<AssetTypeConfigProps> = () => {
 
     return <div>
         <H3><TwoColumnFlex>Asset Definitions {editable && <AddButton onClick={handleAdd} title="Add Asset Definition" />}</TwoColumnFlex></H3>
-        {assetDefinitions?.map(definition => <AssetDefinition key={definition.asset_type} definition={definition} editable={editable} handleTransaction={handleTransaction} />)}
-        {addingDefinition && <Modal requestClose={() => setAddingDefinition(null)}><AssetDefinition definition={addingDefinition} editable creating handleTransaction={() => {/** todo: addOrUpdate here instead of tx */}} /></Modal>}
+        {assetDefinitions?.map(definition => <AssetDefinition key={definition.asset_type} definition={definition} editable={editable} handleTransaction={handleTransaction} service={service} />)}
+        {addingDefinition && <Modal requestClose={() => setAddingDefinition(null)}><AssetDefinition definition={addingDefinition} editable creating handleTransaction={handleTransaction} service={service} /></Modal>}
     </div>
 }
 
@@ -95,10 +97,11 @@ interface AssetDefinitionProps {
     definition: QueryAssetDefinitionResponse
     editable: boolean
     creating?: boolean
-    handleTransaction: (message: string) => any
+    handleTransaction: (message: string) => any,
+    service: AssetClassificationContractService,
 }
 
-const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ definition, editable, creating = false, handleTransaction }) => {
+const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ definition, editable, creating = false, handleTransaction, service }) => {
 
     // todo: edit handler at this level for individual asset definition
     const { walletConnectState } = useWalletConnect()
@@ -135,12 +138,12 @@ const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ definition, 
     }
 
     const handleUpdate = async () => {
-        const message = await new AssetClassificationContractService(ASSET_CONTRACT_ALIAS_NAME).getUpdateAssetDefinitionMessage(definition, walletConnectState.address)
+        const message = await service.getUpdateAssetDefinitionMessage(definition, walletConnectState.address)
         handleTransaction(message)
     }
 
     const handleCreate = async () => {
-        const message = await new AssetClassificationContractService(ASSET_CONTRACT_ALIAS_NAME).getAddAssetDefinitionMessage(definition, bindName, walletConnectState.address)
+        const message = await service.getAddAssetDefinitionMessage(definition, bindName, walletConnectState.address)
         handleTransaction(message)
     }
 
@@ -155,10 +158,10 @@ const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ definition, 
         </DefinitionDetails>
         <AssetVerifiers>
             <H4>Asset Verifiers {editable && <AddButton onClick={handleAdd} style={{float: 'right'}} title={`Add Asset Verifier for ${params.asset_type}`}/>}</H4>
-            {definition.verifiers.length == 0 ? 'No Asset Verifiers' : definition.verifiers.map(verifier => <AssetVerifier key={verifier.address} asset_type={definition.asset_type} verifier={verifier} editable={editable} handleTransaction={handleTransaction} />)}
+            {definition.verifiers.length == 0 ? 'No Asset Verifiers' : definition.verifiers.map(verifier => <AssetVerifier key={verifier.address} asset_type={definition.asset_type} verifier={verifier} editable={editable} handleTransaction={handleTransaction} service={service} />)}
         </AssetVerifiers>
         {!creating && editable && dirty && <ActionContainer><Button onClick={handleUpdate}>Update</Button></ActionContainer>}
-        {verifierToAdd && <Modal requestClose={() => setVerifierToAdd(null)}><AssetVerifier asset_type={definition.asset_type} verifier={verifierToAdd} editable creating handleTransaction={handleTransaction} /> </Modal>}
+        {verifierToAdd && <Modal requestClose={() => setVerifierToAdd(null)}><AssetVerifier asset_type={definition.asset_type} verifier={verifierToAdd} editable creating handleTransaction={handleTransaction} service={service} /> </Modal>}
         {/* {creating && } */}
     </DefinitionWrapper>
 }
@@ -209,10 +212,11 @@ interface AssetVerifierProps {
     verifier: VerifierDetail,
     editable: boolean,
     creating?: boolean,
-    handleTransaction: (message: string) => any
+    handleTransaction: (message: string) => any,
+    service: AssetClassificationContractService
 }
 
-const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_type, verifier, editable, creating = false, handleTransaction }) => {
+const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_type, verifier, editable, creating = false, handleTransaction, service }) => {
     // todo: edit handler at this level for individual asset verifier update
 
     const { walletConnectState } = useWalletConnect()
@@ -260,12 +264,12 @@ const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_type, veri
     }
 
     const handleUpdate = async() => {
-        const message = await new AssetClassificationContractService(ASSET_CONTRACT_ALIAS_NAME).getUpdateAssetVerifierMessage(asset_type, verifier, walletConnectState.address)
+        const message = await service.getUpdateAssetVerifierMessage(asset_type, verifier, walletConnectState.address)
         handleTransaction(message)
     }
 
     const handleCreate = async() => {
-        const message = await new AssetClassificationContractService(ASSET_CONTRACT_ALIAS_NAME).getAddAssetVerifierMessage(asset_type, verifier, walletConnectState.address)
+        const message = await service.getAddAssetVerifierMessage(asset_type, verifier, walletConnectState.address)
         handleTransaction(message)
     }
 
@@ -281,8 +285,8 @@ const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_type, veri
         <AssetVerifierDetails>
             <InputOrDisplay label="Verifier Address" value={params.address} editable={editable} onChange={(e) => { updateParam('address', e.target.value) }} />
             <InputOrDisplay label="Onboarding Cost" value={onboardingCost} editable={editable} onChange={(e) => handleCostChange(e.target.value)} />
-            <InputOrDisplay label="Fee Percent" type="number" min="0" value={params.fee_percent} editable={editable} onChange={(e) => { updateParam('fee_percent', e.target.value) }} />
             <AssetVerifierDetail detail={verifier.entity_detail as EntityDetail} editable={editable} handleChange={handleChange} />
+            <InputOrDisplay label="Fee Percent" type="number" min="0" value={params.fee_percent} editable={editable} onChange={(e) => { updateParam('fee_percent', e.target.value) }} />
         </AssetVerifierDetails>
         <FeeDestinations>
             <H5>Fee Destinations {editable && <AddButton onClick={addFeeDestination} style={{float: "right"}} title="Add Fee Destination" />}</H5>

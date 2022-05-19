@@ -2,14 +2,19 @@ import { useCallback } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { ASSET_CONTRACT_ALIAS_NAME } from '../constants'
 import { AssetClassificationContractService } from '../services'
+import { useAssetClassificationService } from './useAssetClassificationService'
+import { useNetworkConfig } from './useNetworkConfig'
 
-export const useAssetDefinitions = () => useQuery(['asset-definitions'], async () => {
-    const service = new AssetClassificationContractService(ASSET_CONTRACT_ALIAS_NAME)
-
-    return (await service.listInvoiceAssetDefinitions()).asset_definitions
-}, {
-    staleTime: Infinity
-})
+export const useAssetDefinitions = () => {
+    const networkConfig = useNetworkConfig()
+    const service = useAssetClassificationService()
+    return useQuery(['network', networkConfig.network, 'asset-definitions'], async () => {
+        console.log('querying', networkConfig.grpcUrl)
+        return (await service.listInvoiceAssetDefinitions()).asset_definitions
+    }, {
+        staleTime: Infinity
+    })
+}
 
 export const useInvalidateAssetDefinitions = () => {
     const queryClient = useQueryClient()

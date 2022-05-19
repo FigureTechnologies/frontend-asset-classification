@@ -37,7 +37,10 @@ const AdminBadge = styled.div`
     animation: ${adminBadgeAnimation} 2s infinite;
 `
 
-export const ContractConfig: FunctionComponent = () => {
+export interface ContractConfigProps {
+}
+
+export const ContractConfig: FunctionComponent<ContractConfigProps> = () => {
     const { data: config, isLoading } = useAssetClassificationConfig()
     const isAdmin = useIsAdmin()
 

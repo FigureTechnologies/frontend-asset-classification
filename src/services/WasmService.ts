@@ -3,11 +3,16 @@ import { QueryClient as WasmQueryClient } from "@provenanceio/wallet-lib/lib/pro
 import { QuerySmartContractStateRequest } from "@provenanceio/wallet-lib/lib/proto/cosmwasm/wasm/v1/query_pb";
 import { QueryClient as NameQueryClient } from "@provenanceio/wallet-lib/lib/proto/provenance/name/v1/query_grpc_web_pb";
 import { QueryResolveRequest } from "@provenanceio/wallet-lib/lib/proto/provenance/name/v1/query_pb";
-import { GRPC_URL } from '../constants';
+import { PROD_GRPC_URL } from '../constants';
 
 export class WasmService {
-    nameQueryClient: NameQueryClient = new NameQueryClient(GRPC_URL, null)
-    wasmQueryClient: WasmQueryClient = new WasmQueryClient(GRPC_URL, null)
+    nameQueryClient: NameQueryClient = new NameQueryClient(PROD_GRPC_URL, null)
+    wasmQueryClient: WasmQueryClient = new WasmQueryClient(PROD_GRPC_URL, null)
+    
+    constructor(grpcUrl: string) {
+        this.nameQueryClient = new NameQueryClient(grpcUrl, null)
+        this.wasmQueryClient = new WasmQueryClient(grpcUrl, null)
+    }
 
     lookupContractByName(name: string): Promise<string> {
         return new Promise((resolve, reject) => {
