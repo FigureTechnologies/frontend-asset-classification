@@ -35,9 +35,9 @@ function AppContent() {
   const { network } = useParams()
   const setNetwork = useSetNetwork()
   useEffect(() => {
-    console.log('location changed', location, network)
+    console.log('setting network to', network)
     setNetwork(network as string)
-  }, [location])
+  }, [location, network])
 
   return (
     <PageWrapper>
