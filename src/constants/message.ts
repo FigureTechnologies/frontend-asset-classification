@@ -1,0 +1,1 @@
+export const MSG_EXECUTE_CONTRACT_TYPE = '/cosmwasm.wasm.v1.MsgExecuteContract'
