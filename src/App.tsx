@@ -17,7 +17,7 @@ function App() {
       <WalletContextProvider 
         grpcServiceAddress={networkConfig.grpcUrl}
         walletUrl={networkConfig.walletUrl}>
-        <BrowserRouter>
+        <BrowserRouter basename='frontend-asset-classification'>
           <Routes>
             <Route path="/:network" element={<AppContent />} />
           </Routes>
