@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { DARK_BG, DARK_TEXT, LIGHT_TEXT, WHACKY_ACCENT, WHACKY_ACCENT_2 } from "../../constants";
+import { DARK_BG, LIGHT_TEXT, WHACKY_ACCENT_2 } from "../../constants";
 
 export const Warning = styled.div`
     margin: 20px 0;

@@ -11,7 +11,6 @@ import { InputOrDisplay } from "../Input"
 import { Modal } from "../Modal"
 import { AssetVerifier } from "./Verifier"
 import deepEqual from "deep-equal";
-import { Action } from "history"
 
 const DefinitionWrapper = styled.div`
     padding: 20px;
@@ -38,27 +37,28 @@ interface AssetDefinitionProps {
     service: AssetClassificationContractService,
 }
 
+const initialState = (definition: QueryAssetDefinitionResponse) => ({
+    asset_type: definition.asset_type,
+    scope_spec_address: definition.scope_spec_address,
+    verifiers: definition.verifiers,
+})
+
 export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ definition, editable, creating = false, handleTransaction, service }) => {
 
     // todo: edit handler at this level for individual asset definition
     const { walletConnectState } = useWalletConnect()
 
-    const initialState = () => ({
-        asset_type: definition.asset_type,
-        scope_spec_address: definition.scope_spec_address,
-        verifiers: definition.verifiers,
-    })
 
     const [dirty, setDirty] = useState(false)
     const [originalDefinition, setOriginalDefinition] = useState(definition)
     const [verifierToAdd, setVerifierToAdd] = useState<VerifierDetail | null>(null)
-    const [bindName, setBindName] = useState(true)
+    const [bindName] = useState(true) // todo: add bind name checkbox
 
-    const [params, setParams] = useState(initialState())
+    const [params, setParams] = useState(initialState(definition))
 
     useEffect(() => {
         setOriginalDefinition(deepcopy(definition))
-        setParams(initialState())
+        setParams(initialState(definition))
     }, [definition])
 
     const handleChange = () => {
@@ -99,7 +99,7 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         </DefinitionDetails>
         <AssetVerifiers>
             <H4>Asset Verifiers {editable && <AddButton onClick={handleAdd} style={{float: 'right'}} title={`Add Asset Verifier for ${params.asset_type}`}/>}</H4>
-            {definition.verifiers.length == 0 ? 'No Asset Verifiers' : definition.verifiers.map(verifier => <AssetVerifier key={verifier.address} asset_type={definition.asset_type} verifier={verifier} editable={editable} handleTransaction={handleTransaction} service={service} />)}
+            {definition.verifiers.length === 0 ? 'No Asset Verifiers' : definition.verifiers.map(verifier => <AssetVerifier key={verifier.address} asset_type={definition.asset_type} verifier={verifier} editable={editable} handleTransaction={handleTransaction} service={service} />)}
         </AssetVerifiers>
         {!creating && editable && dirty && <ActionContainer><Button onClick={handleUpdate}>Update</Button></ActionContainer>}
         {verifierToAdd && <Modal requestClose={() => setVerifierToAdd(null)}><AssetVerifier asset_type={definition.asset_type} verifier={verifierToAdd} editable creating handleTransaction={handleTransaction} service={service} /> </Modal>}

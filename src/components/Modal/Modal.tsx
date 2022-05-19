@@ -1,4 +1,4 @@
-import React, { FunctionComponent, PropsWithChildren } from "react";
+import { FunctionComponent, PropsWithChildren } from "react";
 import styled from "styled-components";
 import { DARK_BG, TRANSPARENT_DARK_BG, WHITE } from "../../constants";
 

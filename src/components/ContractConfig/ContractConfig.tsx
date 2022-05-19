@@ -42,7 +42,7 @@ export interface ContractConfigProps {
 }
 
 export const ContractConfig: FunctionComponent<ContractConfigProps> = () => {
-    const { data: config, isLoading, isError, ...rest } = useAssetClassificationConfig()
+    const { data: config, isLoading, isError  } = useAssetClassificationConfig()
     const isAdmin = useIsAdmin()
 
     if (isLoading) {

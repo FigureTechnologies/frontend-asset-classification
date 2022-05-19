@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react"
 import styled from "styled-components"
-import { LIGHT_BG, MEDIUM_BG, PRIMARY_ACCENT_LIGHT } from "../../constants"
+import { MEDIUM_BG } from "../../constants"
 import { Input } from "./Input"
 
 export const InputOrDisplayWrapper = styled.div`

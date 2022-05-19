@@ -1,3 +1,4 @@
+import { useCallback } from "react"
 import { useQuery, useQueryClient } from "react-query"
 import { useParams } from "react-router"
 import { NetworkOptions, networkOrDefault, PROD_GRPC_URL, PROD_WALLET_URL, TEST_GRPC_URL, TEST_WALLET_URL } from "../constants"
@@ -24,8 +25,8 @@ export const useNetworkConfig = (): NetworkConfig => {
 
 export const useSetNetwork = () => {
     const queryClient = useQueryClient()
-    return (newNetwork?: string) => {
+    return useCallback((newNetwork?: string) => {
         network = networkOrDefault(newNetwork)
         queryClient.invalidateQueries('network')
-    }
+    }, [queryClient])
 }

@@ -1,6 +1,4 @@
 import { useQuery } from "react-query";
-import { ASSET_CONTRACT_ALIAS_NAME } from "../constants";
-import { AssetClassificationContractService } from "../services";
 import { useAssetClassificationService } from "./useAssetClassificationService";
 import { useNetworkConfig } from "./useNetworkConfig";
 

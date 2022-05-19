@@ -1,7 +1,6 @@
-import { Coin } from "@provenanceio/wallet-lib/lib/proto/cosmos/base/v1beta1/coin_pb"
 import { MsgExecuteContract } from "@provenanceio/wallet-lib/lib/proto/cosmwasm/wasm/v1/tx_pb"
 import { ASSET_CONTRACT_ALIAS_NAME, PROD_GRPC_URL } from "../constants"
-import { AddAssetDefinition, AddAssetVerifier, OnboardAsset, QueryAssetDefinition, QueryAssetDefinitionResponse, QueryAssetDefinitions, QueryAssetDefinitionsResponse, QueryContractConfig, QueryContractConfigResponse, UpdateAssetDefinition, UpdateAssetVerifier, VerifierDetail } from "../models"
+import { AddAssetDefinition, AddAssetVerifier, QueryAssetDefinition, QueryAssetDefinitionResponse, QueryAssetDefinitions, QueryAssetDefinitionsResponse, QueryContractConfig, QueryContractConfigResponse, UpdateAssetDefinition, UpdateAssetVerifier, VerifierDetail } from "../models"
 import { WasmService } from "./WasmService"
 
 export class AssetClassificationContractService {

@@ -1,5 +1,5 @@
-import { QRCodeModal, useWalletConnect, WINDOW_MESSAGES } from "@provenanceio/walletconnect-js";
-import { FunctionComponent, useEffect } from "react";
+import { QRCodeModal, useWalletConnect } from "@provenanceio/walletconnect-js";
+import { FunctionComponent } from "react";
 import styled from 'styled-components'
 import { PRIMARY_ACCENT, PRIMARY_ACCENT_LIGHT } from "../../constants";
 import { Button } from "../Button";

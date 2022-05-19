@@ -1,14 +1,9 @@
-import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { useAssetClassificationService, useAssetDefinitions, useInvalidateAssetDefinitions, useIsAdmin } from "../../hooks";
-import { EntityDetail, FeeDestination, newDefinition, newEntityDetail, newVerifier, QueryAssetDefinitionResponse, VerifierDetail } from "../../models";
-import { H3, H4, H5 } from "../Headers";
-import styled from 'styled-components'
-import { ASSET_CONTRACT_ALIAS_NAME, DARK_BG, DARK_TEXT, LIGHT_TEXT, MSG_EXECUTE_CONTRACT_TYPE, PRIMARY_ACCENT, ROOT_ASSET_CLASSIFICATION_NAME, WHITE } from "../../constants";
-import { Input, InputOrDisplay, InputOrDisplayWrapper } from "../Input";
-import deepEqual from "deep-equal";
-import deepcopy from 'deepcopy'
-import { AddButton, Button } from "../Button";
-import { AssetClassificationContractService } from "../../services";
+import { newDefinition, QueryAssetDefinitionResponse } from "../../models";
+import { H3 } from "../Headers";
+import { MSG_EXECUTE_CONTRACT_TYPE } from "../../constants";
+import { AddButton } from "../Button";
 import { useWalletConnect, WINDOW_MESSAGES } from "@provenanceio/walletconnect-js";
 import { Any } from "google-protobuf/google/protobuf/any_pb";
 import { Modal } from "../Modal";
@@ -24,7 +19,7 @@ export const AssetTypeConfig: FunctionComponent<AssetTypeConfigProps> = () => {
     const isAdmin = useIsAdmin()
     const editable = isAdmin
 
-    const { walletConnectService: wcs, walletConnectState } = useWalletConnect()
+    const { walletConnectService: wcs } = useWalletConnect()
 
     const [addingDefinition, setAddingDefinition] = useState<QueryAssetDefinitionResponse | null>(null)
     const service = useAssetClassificationService()
@@ -59,7 +54,7 @@ export const AssetTypeConfig: FunctionComponent<AssetTypeConfigProps> = () => {
         })
         console.log('listeners registered')
         return () => wcs.removeAllListeners()
-    }, [])
+    }, [invalidateAssetDefinitions, wcs])
 
     const handleAdd = () => {
         setAddingDefinition(newDefinition())

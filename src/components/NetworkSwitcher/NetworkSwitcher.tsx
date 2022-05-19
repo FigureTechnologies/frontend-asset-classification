@@ -16,8 +16,8 @@ export const NetworkSwitcher = () => {
     const navigate = useNavigate()
 
     const toggleNetwork = useCallback(() => {
-    navigate(`/${networkConfig.network === 'mainnet' ? 'testnet' : 'mainnet'}`)
-    }, [networkConfig.network])
+        navigate(`/${networkConfig.network === 'mainnet' ? 'testnet' : 'mainnet'}`)
+    }, [networkConfig.network, navigate])
 
     return <NetworkSwitcherWrapper>
         testnet&nbsp;<Switch onChange={toggleNetwork} checked={networkConfig.network === 'mainnet'} checkedIcon={false} uncheckedIcon={false} />&nbsp;mainnet

@@ -35,6 +35,13 @@ interface AssetVerifierProps {
     service: AssetClassificationContractService
 }
 
+const intitialState = (verifier: VerifierDetail) => ({
+    address: verifier.address,
+    onboardingCost: `${verifier.onboarding_cost}${verifier.onboarding_denom}`,
+    fee_percent: verifier.fee_percent,
+    fee_destinations: verifier.fee_destinations
+})
+
 export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_type, verifier, editable, creating = false, handleTransaction, service }) => {
     // todo: edit handler at this level for individual asset verifier update
 
@@ -43,13 +50,6 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
     const [originalVerifier, setOriginalVerifier] = useState(verifier)
     const [dirty, setDirty] = useState(false)
     const [onboardingCost, setOnboardingCost] = useState(`${verifier.onboarding_cost}${verifier.onboarding_denom}`)
-
-    const intitialState = (verifier: VerifierDetail) => ({
-        address: verifier.address,
-        onboardingCost: `${verifier.onboarding_cost}${verifier.onboarding_denom}`,
-        fee_percent: verifier.fee_percent,
-        fee_destinations: verifier.fee_destinations
-    })
 
     const [params, setParams] = useState(intitialState(verifier))
 
@@ -109,7 +109,7 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
         </AssetVerifierDetails>
         <FeeDestinations>
             <H5>Fee Destinations {editable && <AddButton onClick={addFeeDestination} style={{float: "right"}} title="Add Fee Destination" />}</H5>
-            {verifier.fee_destinations.length == 0 ? 'No Fee Destinations' : verifier.fee_destinations.map(destination => <FeeDestinationDetails key={destination.address} destination={destination} editable={editable} handleChange={handleChange} requestRemoval={() => updateParam('fee_destinations', params.fee_destinations.filter(d => d !== destination))} />)}
+            {verifier.fee_destinations.length === 0 ? 'No Fee Destinations' : verifier.fee_destinations.map(destination => <FeeDestinationDetails key={destination.address} destination={destination} editable={editable} handleChange={handleChange} requestRemoval={() => updateParam('fee_destinations', params.fee_destinations.filter(d => d !== destination))} />)}
         </FeeDestinations>
         {!creating && editable && dirty && <ActionContainer><Button onClick={handleUpdate}>Update</Button></ActionContainer>}
         {creating && <ActionContainer><Button onClick={handleCreate}>Add Verifier</Button></ActionContainer>}
@@ -122,13 +122,14 @@ interface AssetVerifierDetailProps {
     handleChange: () => any
 }
 
+const initialState = (entityDetail: EntityDetail) => ({
+    name: entityDetail.name,
+    description: entityDetail.description,
+    home_url: entityDetail.home_url,
+    source_url: entityDetail.source_url,
+})
+
 const AssetVerifierDetail: FunctionComponent<AssetVerifierDetailProps> = ({ detail, editable, handleChange }) => {
-    const initialState = (entityDetail: EntityDetail) => ({
-        name: detail.name,
-        description: detail.description,
-        home_url: detail.home_url,
-        source_url: detail.source_url,
-    })
 
     const [params, setParams] = useState(initialState(detail))
 

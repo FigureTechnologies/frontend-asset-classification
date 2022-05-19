@@ -1,17 +1,13 @@
 import './App.css';
-import { BrowserRouter, Link, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { AssetTypeConfig, PageWrapper } from './components/Page';
 import { H1 } from './components/Headers';
 import { LoginManager } from './components/Login';
 import { ContractConfig } from './components/ContractConfig';
-import { useCallback, useEffect, useState } from 'react';
-import { useWalletConnect, useWalletConnectService, WalletConnectContextProvider } from '@provenanceio/walletconnect-js';
+import { useEffect } from 'react';
+import { useWalletConnect, WalletConnectContextProvider } from '@provenanceio/walletconnect-js';
 import { WalletContextProvider } from '@provenanceio/wallet-lib';
-import { PROD_GRPC_URL, PROD_WALLET_URL, TEST_GRPC_URL, TEST_WALLET_URL } from './constants';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { useSetNetwork, useNetworkConfig } from './hooks';
-import styled from 'styled-components';
-import Switch from 'react-switch'
 import { NetworkSwitcher } from './components/NetworkSwitcher';
 
 function App() {
@@ -38,7 +34,7 @@ function AppContent() {
   useEffect(() => {
     wcs.setNetwork(network || 'mainnet')
     setNetwork(network)
-  }, [location, network])
+  }, [location, network, setNetwork, wcs])
 
   return (
     <PageWrapper>

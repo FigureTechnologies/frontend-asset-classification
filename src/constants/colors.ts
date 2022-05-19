@@ -1,6 +1,6 @@
-const RICH_BLACK_FOGRA_29 = '#001011ff';
+// const RICH_BLACK_FOGRA_29 = '#001011ff';
 const RICH_BLACK = '#093a3eff';
-const VERDIGRIS = '#3aafb9ff';
+// const VERDIGRIS = '#3aafb9ff';
 const ELECTRIC_BLUE = '#64e9eeff';
 const PALE_CERULEAN = '#97c8ebff';
 const LIGHT_BLUE = '#BED7DA'
