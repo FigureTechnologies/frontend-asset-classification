@@ -19,7 +19,7 @@ interface AssetTypeConfigProps {
 }
 
 export const AssetTypeConfig: FunctionComponent<AssetTypeConfigProps> = () => {
-    const { data: assetDefinitions, isLoading, ...rest } = useAssetDefinitions()
+    const { data: assetDefinitions, isLoading, isError } = useAssetDefinitions()
     const invalidateAssetDefinitions = useInvalidateAssetDefinitions()
     const isAdmin = useIsAdmin()
     const editable = isAdmin
@@ -58,6 +58,7 @@ export const AssetTypeConfig: FunctionComponent<AssetTypeConfigProps> = () => {
             console.log('TRANSACTION_FAILED', res)
         })
         console.log('listeners registered')
+        return () => wcs.removeAllListeners()
     }, [])
 
     const handleAdd = () => {
@@ -66,6 +67,10 @@ export const AssetTypeConfig: FunctionComponent<AssetTypeConfigProps> = () => {
 
     if (isLoading) {
         <div>Loading</div>
+    }
+
+    if (isError) {
+        return <></>
     }
 
     return <div>

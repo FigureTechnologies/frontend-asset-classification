@@ -11,6 +11,7 @@ import { InputOrDisplay } from "../Input"
 import { Modal } from "../Modal"
 import { AssetVerifier } from "./Verifier"
 import deepEqual from "deep-equal";
+import { Action } from "history"
 
 const DefinitionWrapper = styled.div`
     padding: 20px;
@@ -84,7 +85,11 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
     }
 
     const handleAdd = () => {
-        setVerifierToAdd(newVerifier())
+        if (creating) {
+            updateParam('verifiers', [...params.verifiers, newVerifier()])
+        } else {
+            setVerifierToAdd(newVerifier())
+        }
     }
 
     return <DefinitionWrapper>
@@ -98,6 +103,6 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         </AssetVerifiers>
         {!creating && editable && dirty && <ActionContainer><Button onClick={handleUpdate}>Update</Button></ActionContainer>}
         {verifierToAdd && <Modal requestClose={() => setVerifierToAdd(null)}><AssetVerifier asset_type={definition.asset_type} verifier={verifierToAdd} editable creating handleTransaction={handleTransaction} service={service} /> </Modal>}
-        {/* {creating && } */}
+        {creating && <ActionContainer><Button onClick={handleCreate}>Add Definition</Button></ActionContainer>}
     </DefinitionWrapper>
 }

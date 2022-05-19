@@ -24,6 +24,7 @@ const ModalContainer = styled.div`
     min-width: 1200px;
     max-width: 90%;
     max-height: 90%;
+    overflow-y: scroll;
 `
 
 interface ModalProps {

@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components'
 import { DARK_BG, PRIMARY_ACCENT, PRIMARY_ACCENT_LIGHT, WHACKY_ACCENT, WHACKY_ACCENT_2, WHITE } from "../../constants";
 import { useAssetClassificationConfig, useIsAdmin } from "../../hooks";
 import { H2 } from "../Headers";
+import { Warning } from "../Warning";
 
 const Wrapper = styled.div`
     display: flex;
@@ -41,11 +42,15 @@ export interface ContractConfigProps {
 }
 
 export const ContractConfig: FunctionComponent<ContractConfigProps> = () => {
-    const { data: config, isLoading } = useAssetClassificationConfig()
+    const { data: config, isLoading, isError, ...rest } = useAssetClassificationConfig()
     const isAdmin = useIsAdmin()
 
     if (isLoading) {
         return <></>
+    }
+
+    if (isError) {
+        return <Warning>Error Loading Contract Configuration</Warning>
     }
 
     return <div>

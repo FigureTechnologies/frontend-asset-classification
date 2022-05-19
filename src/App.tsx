@@ -5,7 +5,7 @@ import { H1 } from './components/Headers';
 import { LoginManager } from './components/Login';
 import { ContractConfig } from './components/ContractConfig';
 import { useCallback, useEffect, useState } from 'react';
-import { WalletConnectContextProvider } from '@provenanceio/walletconnect-js';
+import { useWalletConnect, useWalletConnectService, WalletConnectContextProvider } from '@provenanceio/walletconnect-js';
 import { WalletContextProvider } from '@provenanceio/wallet-lib';
 import { PROD_GRPC_URL, PROD_WALLET_URL, TEST_GRPC_URL, TEST_WALLET_URL } from './constants';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -34,9 +34,10 @@ function AppContent() {
   const location = useLocation()
   const { network } = useParams()
   const setNetwork = useSetNetwork()
+  const { walletConnectService: wcs } = useWalletConnect()
   useEffect(() => {
-    console.log('setting network to', network)
-    setNetwork(network as string)
+    wcs.setNetwork(network || 'mainnet')
+    setNetwork(network)
   }, [location, network])
 
   return (
