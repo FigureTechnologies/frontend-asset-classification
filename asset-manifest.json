@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/static/css/main.a617e044.chunk.css",
-    "main.js": "/static/js/main.9d615894.chunk.js",
-    "main.js.map": "/static/js/main.9d615894.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.bb80129f.js",
-    "runtime-main.js.map": "/static/js/runtime-main.bb80129f.js.map",
-    "static/js/2.2e79e5e1.chunk.js": "/static/js/2.2e79e5e1.chunk.js",
-    "static/js/2.2e79e5e1.chunk.js.map": "/static/js/2.2e79e5e1.chunk.js.map",
-    "index.html": "/index.html",
-    "static/css/main.a617e044.chunk.css.map": "/static/css/main.a617e044.chunk.css.map",
-    "static/js/2.2e79e5e1.chunk.js.LICENSE.txt": "/static/js/2.2e79e5e1.chunk.js.LICENSE.txt",
-    "static/media/appStoreBadge.8c4986ee.svg": "/static/media/appStoreBadge.8c4986ee.svg",
-    "static/media/googlePlayBadge.e3d930c8.png": "/static/media/googlePlayBadge.e3d930c8.png",
-    "static/media/provenance.16cb133f.svg": "/static/media/provenance.16cb133f.svg"
+    "main.css": "/frontend-asset-classification/static/css/main.a617e044.chunk.css",
+    "main.js": "/frontend-asset-classification/static/js/main.9d615894.chunk.js",
+    "main.js.map": "/frontend-asset-classification/static/js/main.9d615894.chunk.js.map",
+    "runtime-main.js": "/frontend-asset-classification/static/js/runtime-main.cf485a2a.js",
+    "runtime-main.js.map": "/frontend-asset-classification/static/js/runtime-main.cf485a2a.js.map",
+    "static/js/2.4b00f6c3.chunk.js": "/frontend-asset-classification/static/js/2.4b00f6c3.chunk.js",
+    "static/js/2.4b00f6c3.chunk.js.map": "/frontend-asset-classification/static/js/2.4b00f6c3.chunk.js.map",
+    "index.html": "/frontend-asset-classification/index.html",
+    "static/css/main.a617e044.chunk.css.map": "/frontend-asset-classification/static/css/main.a617e044.chunk.css.map",
+    "static/js/2.4b00f6c3.chunk.js.LICENSE.txt": "/frontend-asset-classification/static/js/2.4b00f6c3.chunk.js.LICENSE.txt",
+    "static/media/appStoreBadge.8c4986ee.svg": "/frontend-asset-classification/static/media/appStoreBadge.8c4986ee.svg",
+    "static/media/googlePlayBadge.e3d930c8.png": "/frontend-asset-classification/static/media/googlePlayBadge.e3d930c8.png",
+    "static/media/provenance.16cb133f.svg": "/frontend-asset-classification/static/media/provenance.16cb133f.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.bb80129f.js",
-    "static/js/2.2e79e5e1.chunk.js",
+    "static/js/runtime-main.cf485a2a.js",
+    "static/js/2.4b00f6c3.chunk.js",
     "static/css/main.a617e044.chunk.css",
     "static/js/main.9d615894.chunk.js"
   ]
