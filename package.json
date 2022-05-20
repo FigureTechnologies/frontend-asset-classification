@@ -2,6 +2,7 @@
   "name": "frontend-asset-classification",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://provenance-io.github.io/frontend-asset-classification",
   "dependencies": {
     "@provenanceio/walletconnect-js": "^1.0.10",
     "@testing-library/jest-dom": "^5.16.4",
