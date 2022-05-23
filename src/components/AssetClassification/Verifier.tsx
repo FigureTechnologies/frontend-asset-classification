@@ -5,7 +5,7 @@ import styled from "styled-components"
 import { DARK_TEXT } from "../../constants"
 import { VerifierDetail, newEntityDetail, EntityDetail } from "../../models"
 import { AssetClassificationContractService } from "../../services"
-import { ActionContainer, AddButton, Button } from "../Button"
+import { ActionContainer, AddButton, Button, RemoveButton } from "../Button"
 import { H5 } from "../Headers"
 import { InputOrDisplay } from "../Input"
 import { FeeDestinationDetails } from "./FeeDestination"
@@ -13,6 +13,7 @@ import deepEqual from "deep-equal";
 import { useTransaction } from "../../hooks"
 
 const AssetVerifierWrapper = styled.div`
+    position: relative;
     margin-top: 20px;
     padding-left: 20px;
     border-left: 5px solid ${DARK_TEXT};
@@ -27,12 +28,23 @@ const AssetVerifierDetails = styled.div`
     grid-template-columns: 1fr 1fr;
     grid-gap: 10px;
 `
+
+const DeleteVerifierButton = styled(RemoveButton)`
+    position: absolute;
+    top: 0;
+    left: -2px;
+    font-size: 1rem;
+    transform: translate(-50%, -50%);
+`
+
 interface AssetVerifierProps {
     asset_type: string,
     verifier: VerifierDetail,
     editable: boolean,
     creating?: boolean,
-    service: AssetClassificationContractService
+    service: AssetClassificationContractService,
+    newDefinition?: boolean,
+    requestRemoval?: () => any,
 }
 
 const intitialState = (verifier: VerifierDetail) => ({
@@ -42,7 +54,7 @@ const intitialState = (verifier: VerifierDetail) => ({
     fee_destinations: verifier.fee_destinations
 })
 
-export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_type, verifier, editable, creating = false, service }) => {
+export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_type, verifier, editable, creating = false, newDefinition, service, requestRemoval = () => {} }) => {
     // todo: edit handler at this level for individual asset verifier update
 
     const { walletConnectState } = useWalletConnect()
@@ -102,6 +114,7 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
     }
 
     return <AssetVerifierWrapper>
+        {!creating && <DeleteVerifierButton onClick={requestRemoval} title="Remove Asset Verifier" />}
         <AssetVerifierDetails>
             <InputOrDisplay label="Verifier Address" value={params.address} editable={editable} onChange={(e) => { updateParam('address', e.target.value) }} />
             <InputOrDisplay label="Onboarding Cost" value={onboardingCost} editable={editable} onChange={(e) => handleCostChange(e.target.value)} />
@@ -112,8 +125,8 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
             <H5>Fee Destinations {editable && <AddButton onClick={addFeeDestination} style={{float: "right"}} title="Add Fee Destination" />}</H5>
             {verifier.fee_destinations.length === 0 ? 'No Fee Destinations' : verifier.fee_destinations.map(destination => <FeeDestinationDetails key={destination.address} destination={destination} editable={editable} handleChange={handleChange} requestRemoval={() => updateParam('fee_destinations', params.fee_destinations.filter(d => d !== destination))} />)}
         </FeeDestinations>
-        {!creating && editable && dirty && <ActionContainer><Button onClick={handleUpdate}>Update</Button></ActionContainer>}
-        {creating && <ActionContainer><Button onClick={handleCreate}>Add Verifier</Button></ActionContainer>}
+        {!newDefinition && !creating && editable && dirty && <ActionContainer><Button onClick={handleUpdate}>Update</Button></ActionContainer>}
+        {!newDefinition && creating && <ActionContainer><Button onClick={handleCreate}>Add Verifier</Button></ActionContainer>}
     </AssetVerifierWrapper>
 }
 

@@ -9,7 +9,7 @@ const Wrapper = styled.div`
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    padding: 20px;
+    padding: 20px 40px;
     min-width: 300px;
     max-width: 90%;
     border-top-left-radius: 5px;
@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 
 const CloseButton = styled(RemoveButton)`
     position: absolute;
-    top: 10px;
+    top: 1rem;
     right: 10px;
     font-size: 1rem;
 `

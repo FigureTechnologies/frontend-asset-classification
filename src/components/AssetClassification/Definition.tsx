@@ -1,4 +1,4 @@
-import { useWalletConnect } from "@provenanceio/walletconnect-js"
+import { useWalletConnect, WINDOW_MESSAGES } from "@provenanceio/walletconnect-js"
 import deepcopy from "deepcopy"
 import { FunctionComponent, useState, useEffect } from "react"
 import styled from "styled-components"
@@ -12,6 +12,7 @@ import { Modal } from "../Modal"
 import { AssetVerifier } from "./Verifier"
 import deepEqual from "deep-equal";
 import { useTransaction } from "../../hooks"
+import { Action } from "history"
 
 const DefinitionWrapper = styled.div<{ border: boolean }>`
     padding: 20px;
@@ -23,7 +24,7 @@ const DefinitionWrapper = styled.div<{ border: boolean }>`
 
 const DefinitionDetails = styled.div`
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr auto;
     grid-gap: 10px;
 `
 
@@ -41,19 +42,19 @@ const initialState = (definition: QueryAssetDefinitionResponse) => ({
     asset_type: definition.asset_type,
     scope_spec_address: definition.scope_spec_address,
     verifiers: definition.verifiers,
+    enabled: definition.enabled,
 })
 
 export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ definition, editable, creating = false, service }) => {
-
-    // todo: edit handler at this level for individual asset definition
-    const { walletConnectState } = useWalletConnect()
+    const { walletConnectService: wcs, walletConnectState } = useWalletConnect()
     const [, setTransaction] = useTransaction()
 
 
     const [dirty, setDirty] = useState(false)
     const [originalDefinition, setOriginalDefinition] = useState(definition)
     const [verifierToAdd, setVerifierToAdd] = useState<VerifierDetail | null>(null)
-    const [bindName] = useState(true) // todo: add bind name checkbox
+    const [bindName, setBindName] = useState(true)
+    const [verifierToRemove, setVerifierToRemove] = useState<VerifierDetail>()
 
     const [params, setParams] = useState(initialState(definition))
 
@@ -61,6 +62,15 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         setOriginalDefinition(deepcopy(definition))
         setParams(initialState(definition))
     }, [definition])
+
+    useEffect(() => {
+        const callback = () => {
+            setVerifierToAdd(null)
+        }
+        console.log('adding listener for verifier add')
+        wcs.addListener(WINDOW_MESSAGES.CUSTOM_ACTION_COMPLETE, callback)
+        return () => { console.log('removing listener for verifier add'); wcs.removeListener(WINDOW_MESSAGES.CUSTOM_ACTION_COMPLETE, callback)}
+    }, [wcs])
 
     const handleChange = () => {
         setDirty(!deepEqual(definition, originalDefinition, { strict: true }))
@@ -93,17 +103,38 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         }
     }
 
+    const requestVerifierRemoval = (verifier: VerifierDetail) => {
+        setVerifierToRemove(verifier)
+    }
+
+    const handleRemoveVerifier = async (verifier: VerifierDetail) => {
+        const clonedDefinition = deepcopy(definition)
+        clonedDefinition.verifiers = clonedDefinition.verifiers.filter(v => v.address != verifier.address)
+        const message = await service.getUpdateAssetDefinitionMessage(clonedDefinition, walletConnectState.address)
+        setTransaction(message)
+        setVerifierToRemove(undefined)
+    }
+
     return <DefinitionWrapper border={!creating}>
         <DefinitionDetails>
             <InputOrDisplay label="Asset Type" value={definition.asset_type} editable={creating} onChange={(e) => { updateParam('asset_type', e.target.value) }} />
             <InputOrDisplay label="Scope Spec Address" editable={editable} value={definition.scope_spec_address} onChange={(e) => { updateParam('scope_spec_address', e.target.value) }} />
+            <InputOrDisplay label="Enabled" editable={editable} checked={params.enabled} value={`${definition.enabled}`} type="checkbox" onChange={(e) => { updateParam('enabled', e.target.checked) }} />
+            {creating && <InputOrDisplay label="Bind Name" editable checked={bindName} type="checkbox" onChange={(e) => { setBindName(e.target.checked) }} />}
         </DefinitionDetails>
         <AssetVerifiers>
             <H4>Asset Verifiers {editable && <AddButton onClick={handleAdd} style={{float: 'right'}} title={`Add Asset Verifier for ${params.asset_type}`}/>}</H4>
-            {definition.verifiers.length === 0 ? 'No Asset Verifiers' : definition.verifiers.map(verifier => <AssetVerifier key={verifier.address} asset_type={definition.asset_type} verifier={verifier} editable={editable} service={service} />)}
+            {definition.verifiers.length === 0 ? 'No Asset Verifiers' : definition.verifiers.map(verifier => <AssetVerifier key={verifier.address} asset_type={definition.asset_type} verifier={verifier} editable={editable} service={service} newDefinition={creating} requestRemoval={() => requestVerifierRemoval(verifier)} />)}
         </AssetVerifiers>
         {!creating && editable && dirty && <ActionContainer><Button onClick={handleUpdate}>Update</Button></ActionContainer>}
         {verifierToAdd && <Modal requestClose={() => setVerifierToAdd(null)}><AssetVerifier asset_type={definition.asset_type} verifier={verifierToAdd} editable creating service={service} /> </Modal>}
         {creating && <ActionContainer><Button onClick={handleCreate}>Add Definition</Button></ActionContainer>}
+        {verifierToRemove && <Modal requestClose={() => setVerifierToRemove(undefined)}>
+            {`Are you sure you want to remove verifier for ${definition.asset_type} with address ${verifierToRemove.address}?`}
+            <ActionContainer>
+                <Button secondary onClick={() => setVerifierToRemove(undefined)}>Cancel</Button>
+                <Button onClick={() => handleRemoveVerifier(verifierToRemove)}>Yes, Remove</Button>
+            </ActionContainer>
+        </Modal>}
     </DefinitionWrapper>
 }

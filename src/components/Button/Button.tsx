@@ -1,11 +1,15 @@
 import styled from "styled-components"
-import { DARK_BG, LIGHT_TEXT } from "../../constants"
+import { DARK_BG, DARK_TEXT, LIGHT_TEXT } from "../../constants"
 
-export const Button = styled.button`
+export interface ButtonProps {
+    secondary?: boolean
+}
+
+export const Button = styled.button<ButtonProps>`
     padding: 10px 20px;
-    background: ${DARK_BG};
-    color: ${LIGHT_TEXT};
-    border: none;
+    background: ${({ secondary }) => secondary ? 'transparent' : DARK_BG};
+    color: ${({ secondary }) => secondary ? DARK_TEXT : LIGHT_TEXT};
+    border: ${({ secondary }) => secondary ? `1px solid ${DARK_TEXT}` :'none'};
     border-radius: 5px;
     cursor: pointer;
 `

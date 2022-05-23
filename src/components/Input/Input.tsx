@@ -7,6 +7,6 @@ export const Input = styled.input`
     padding: 10px;
     border-radius: 5px;
     margin-right: 0;
-    width: 100%;
+    width: ${({ type }) => type === 'checkbox' ? 'auto': '100%'};
     box-sizing: border-box;
 `

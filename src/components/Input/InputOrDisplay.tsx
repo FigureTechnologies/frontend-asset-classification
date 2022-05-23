@@ -25,8 +25,8 @@ export type InputOrDisplayProps = {
 export const InputOrDisplay: FunctionComponent<InputOrDisplayProps> = ({editable, label, value,  ...rest}) => {
     return <InputOrDisplayWrapper>
         <Label>{label}</Label>
-        {editable ?
-            <Input value={value} {...rest} /> :
+        {editable || rest.type === 'checkbox' ?
+            <Input disabled={!editable} value={value} {...rest} /> :
             <DisplayWrapper>{value}</DisplayWrapper>
         }
     </InputOrDisplayWrapper>
