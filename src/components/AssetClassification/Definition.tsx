@@ -12,7 +12,6 @@ import { Modal } from "../Modal"
 import { AssetVerifier } from "./Verifier"
 import deepEqual from "deep-equal";
 import { useTransaction } from "../../hooks"
-import { Action } from "history"
 
 const DefinitionWrapper = styled.div<{ border: boolean }>`
     padding: 20px;
@@ -109,7 +108,7 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
 
     const handleRemoveVerifier = async (verifier: VerifierDetail) => {
         const clonedDefinition = deepcopy(definition)
-        clonedDefinition.verifiers = clonedDefinition.verifiers.filter(v => v.address != verifier.address)
+        clonedDefinition.verifiers = clonedDefinition.verifiers.filter(v => v.address !== verifier.address)
         const message = await service.getUpdateAssetDefinitionMessage(clonedDefinition, walletConnectState.address)
         setTransaction(message)
         setVerifierToRemove(undefined)

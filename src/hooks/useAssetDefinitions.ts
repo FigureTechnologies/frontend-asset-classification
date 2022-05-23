@@ -19,5 +19,5 @@ export const useInvalidateAssetDefinitions = () => {
 
     return useCallback(() => {
         queryClient.invalidateQueries(['network', networkConfig.network, 'asset-definitions'])
-    }, [queryClient])
+    }, [queryClient, networkConfig.network])
 }
