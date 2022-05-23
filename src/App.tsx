@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { AssetTypeConfig, PageWrapper } from './components/Page';
 import { H1 } from './components/Headers';
 import { LoginManager } from './components/Login';
@@ -20,6 +20,7 @@ function App() {
         <BrowserRouter basename='frontend-asset-classification'>
           <Routes>
             <Route path="/:network" element={<AppContent />} />
+            <Route path="*" element={<Navigate to="/testnet" />} />
           </Routes>
         </BrowserRouter>
       </WalletContextProvider>
