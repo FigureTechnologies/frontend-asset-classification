@@ -10,6 +10,7 @@ import { H5 } from "../Headers"
 import { InputOrDisplay } from "../Input"
 import { FeeDestinationDetails } from "./FeeDestination"
 import deepEqual from "deep-equal";
+import { useTransaction } from "../../hooks"
 
 const AssetVerifierWrapper = styled.div`
     margin-top: 20px;
@@ -31,7 +32,6 @@ interface AssetVerifierProps {
     verifier: VerifierDetail,
     editable: boolean,
     creating?: boolean,
-    handleTransaction: (message: string) => any,
     service: AssetClassificationContractService
 }
 
@@ -42,10 +42,11 @@ const intitialState = (verifier: VerifierDetail) => ({
     fee_destinations: verifier.fee_destinations
 })
 
-export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_type, verifier, editable, creating = false, handleTransaction, service }) => {
+export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_type, verifier, editable, creating = false, service }) => {
     // todo: edit handler at this level for individual asset verifier update
 
     const { walletConnectState } = useWalletConnect()
+    const [, setTransaction] = useTransaction()
 
     const [originalVerifier, setOriginalVerifier] = useState(verifier)
     const [dirty, setDirty] = useState(false)
@@ -84,12 +85,12 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
 
     const handleUpdate = async() => {
         const message = await service.getUpdateAssetVerifierMessage(asset_type, verifier, walletConnectState.address)
-        handleTransaction(message)
+        setTransaction(message)
     }
 
     const handleCreate = async() => {
         const message = await service.getAddAssetVerifierMessage(asset_type, verifier, walletConnectState.address)
-        handleTransaction(message)
+        setTransaction(message)
     }
 
     const addFeeDestination = () => {

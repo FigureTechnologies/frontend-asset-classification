@@ -11,13 +11,14 @@ import { InputOrDisplay } from "../Input"
 import { Modal } from "../Modal"
 import { AssetVerifier } from "./Verifier"
 import deepEqual from "deep-equal";
+import { useTransaction } from "../../hooks"
 
-const DefinitionWrapper = styled.div`
+const DefinitionWrapper = styled.div<{ border: boolean }>`
     padding: 20px;
     margin-bottom: 20px;
     background: ${WHITE};
     border-radius: 5px;
-    border: 1px solid ${DARK_BG};
+    border: ${({ border }) => border && `1px solid ${DARK_BG}`};
 `
 
 const DefinitionDetails = styled.div`
@@ -33,7 +34,6 @@ interface AssetDefinitionProps {
     definition: QueryAssetDefinitionResponse
     editable: boolean
     creating?: boolean
-    handleTransaction: (message: string) => any,
     service: AssetClassificationContractService,
 }
 
@@ -43,10 +43,11 @@ const initialState = (definition: QueryAssetDefinitionResponse) => ({
     verifiers: definition.verifiers,
 })
 
-export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ definition, editable, creating = false, handleTransaction, service }) => {
+export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ definition, editable, creating = false, service }) => {
 
     // todo: edit handler at this level for individual asset definition
     const { walletConnectState } = useWalletConnect()
+    const [, setTransaction] = useTransaction()
 
 
     const [dirty, setDirty] = useState(false)
@@ -76,12 +77,12 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
 
     const handleUpdate = async () => {
         const message = await service.getUpdateAssetDefinitionMessage(definition, walletConnectState.address)
-        handleTransaction(message)
+        setTransaction(message)
     }
 
     const handleCreate = async () => {
         const message = await service.getAddAssetDefinitionMessage(definition, bindName, walletConnectState.address)
-        handleTransaction(message)
+        setTransaction(message)
     }
 
     const handleAdd = () => {
@@ -92,17 +93,17 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         }
     }
 
-    return <DefinitionWrapper>
+    return <DefinitionWrapper border={!creating}>
         <DefinitionDetails>
             <InputOrDisplay label="Asset Type" value={definition.asset_type} editable={creating} onChange={(e) => { updateParam('asset_type', e.target.value) }} />
             <InputOrDisplay label="Scope Spec Address" editable={editable} value={definition.scope_spec_address} onChange={(e) => { updateParam('scope_spec_address', e.target.value) }} />
         </DefinitionDetails>
         <AssetVerifiers>
             <H4>Asset Verifiers {editable && <AddButton onClick={handleAdd} style={{float: 'right'}} title={`Add Asset Verifier for ${params.asset_type}`}/>}</H4>
-            {definition.verifiers.length === 0 ? 'No Asset Verifiers' : definition.verifiers.map(verifier => <AssetVerifier key={verifier.address} asset_type={definition.asset_type} verifier={verifier} editable={editable} handleTransaction={handleTransaction} service={service} />)}
+            {definition.verifiers.length === 0 ? 'No Asset Verifiers' : definition.verifiers.map(verifier => <AssetVerifier key={verifier.address} asset_type={definition.asset_type} verifier={verifier} editable={editable} service={service} />)}
         </AssetVerifiers>
         {!creating && editable && dirty && <ActionContainer><Button onClick={handleUpdate}>Update</Button></ActionContainer>}
-        {verifierToAdd && <Modal requestClose={() => setVerifierToAdd(null)}><AssetVerifier asset_type={definition.asset_type} verifier={verifierToAdd} editable creating handleTransaction={handleTransaction} service={service} /> </Modal>}
+        {verifierToAdd && <Modal requestClose={() => setVerifierToAdd(null)}><AssetVerifier asset_type={definition.asset_type} verifier={verifierToAdd} editable creating service={service} /> </Modal>}
         {creating && <ActionContainer><Button onClick={handleCreate}>Add Definition</Button></ActionContainer>}
     </DefinitionWrapper>
 }

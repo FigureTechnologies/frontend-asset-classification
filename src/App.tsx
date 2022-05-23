@@ -9,6 +9,8 @@ import { useWalletConnect, WalletConnectContextProvider } from '@provenanceio/wa
 import { WalletContextProvider } from '@provenanceio/wallet-lib';
 import { useSetNetwork, useNetworkConfig } from './hooks';
 import { NetworkSwitcher } from './components/NetworkSwitcher';
+import { TransactionHandler } from './components/TransactionHandler';
+import { ErrorPopup } from './components/Popup';
 
 function App() {
   const networkConfig = useNetworkConfig()
@@ -48,6 +50,8 @@ function AppContent() {
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <NetworkSwitcher />
       </div>
+      <TransactionHandler />
+      <ErrorPopup />
     </PageWrapper>
   );
 }

@@ -8,6 +8,7 @@ export const useAssetClassificationConfig = () => {
     return useQuery(['network', networkConfig.network, 'asset-classification-config'], async () => {
         return await service.getConfig()
     }, {
-        staleTime: Infinity
+        staleTime: Infinity,
+        retry: false
     })
 }
