@@ -25,7 +25,7 @@ interface FeeDestinationDetailsProps {
 export const FeeDestinationDetails: FunctionComponent<FeeDestinationDetailsProps> = ({ destination, editable, handleChange, requestRemoval }) => {
     const [params, setParams] = useState({
         address: destination.address,
-        fee_percent: destination.fee_percent
+        fee_amount: destination.fee_amount
     })
 
     const updateParam = (key: string, value: string) => {
@@ -39,7 +39,7 @@ export const FeeDestinationDetails: FunctionComponent<FeeDestinationDetailsProps
 
     return <FeeDestinationWrapper>
         <InputOrDisplay label="Address" value={destination.address} editable={editable} onChange={(e) => { updateParam('address', e.target.value) }} />
-        <InputOrDisplay label="Fee Percent" value={destination.fee_percent} editable={editable} onChange={(e) => { updateParam('fee_percent', e.target.value) }} />
+        <InputOrDisplay label="Fee Amount" value={destination.fee_amount} editable={editable} onChange={(e) => { updateParam('fee_amount', e.target.value) }} />
         {editable && <div><RemoveButton onClick={requestRemoval} /></div>}
     </FeeDestinationWrapper>
 }

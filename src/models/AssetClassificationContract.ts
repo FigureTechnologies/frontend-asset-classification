@@ -99,7 +99,6 @@ export interface VerifierDetail {
     address: string,
     onboarding_cost: string,
     onboarding_denom: string,
-    fee_percent: string,
     fee_destinations: FeeDestination[],
     entity_detail?: EntityDetail,
 }
@@ -109,7 +108,6 @@ export function newVerifier(): VerifierDetail {
         address: '',
         onboarding_cost: '0',
         onboarding_denom: 'nhash',
-        fee_percent: '0',
         fee_destinations: [],
         entity_detail: newEntityDetail()
     }
@@ -126,7 +124,7 @@ export function newEntityDetail(): EntityDetail {
 
 export interface FeeDestination {
     address: string,
-    fee_percent: string,
+    fee_amount: string,
 }
 
 export interface EntityDetail {

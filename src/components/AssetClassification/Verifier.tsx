@@ -3,7 +3,7 @@ import deepcopy from "deepcopy"
 import { FunctionComponent, useState, useEffect } from "react"
 import styled from "styled-components"
 import { DARK_TEXT } from "../../constants"
-import { VerifierDetail, newEntityDetail, EntityDetail } from "../../models"
+import { VerifierDetail, newEntityDetail, EntityDetail, FeeDestination } from "../../models"
 import { AssetClassificationContractService } from "../../services"
 import { ActionContainer, AddButton, Button, RemoveButton } from "../Button"
 import { H5 } from "../Headers"
@@ -50,7 +50,6 @@ interface AssetVerifierProps {
 const intitialState = (verifier: VerifierDetail) => ({
     address: verifier.address,
     onboardingCost: `${verifier.onboarding_cost}${verifier.onboarding_denom}`,
-    fee_percent: verifier.fee_percent,
     fee_destinations: verifier.fee_destinations
 })
 
@@ -106,9 +105,9 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
     }
 
     const addFeeDestination = () => {
-        const newFeeDestination = {
+        const newFeeDestination: FeeDestination = {
             address: '',
-            fee_percent: '',
+            fee_amount: '',
         }
         updateParam('fee_destinations', [...params.fee_destinations, newFeeDestination])
     }
@@ -119,7 +118,6 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
             <InputOrDisplay label="Verifier Address" value={params.address} editable={editable} onChange={(e) => { updateParam('address', e.target.value) }} />
             <InputOrDisplay label="Onboarding Cost" value={onboardingCost} editable={editable} onChange={(e) => handleCostChange(e.target.value)} />
             <AssetVerifierDetail detail={verifier.entity_detail as EntityDetail} editable={editable} handleChange={handleChange} />
-            <InputOrDisplay label="Fee Percent" type="number" min="0" value={params.fee_percent} editable={editable} onChange={(e) => { updateParam('fee_percent', e.target.value) }} />
         </AssetVerifierDetails>
         <FeeDestinations>
             <H5>Fee Destinations {editable && <AddButton onClick={addFeeDestination} style={{float: "right"}} title="Add Fee Destination" />}</H5>
