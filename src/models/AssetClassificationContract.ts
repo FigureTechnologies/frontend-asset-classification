@@ -54,7 +54,7 @@ export interface AssetDefinitionInput {
     scope_spec_identifier: ScopeSpecIdentifier,
     verifiers: VerifierDetail[],
     enabled: boolean,
-    bind_name: boolean,
+    bind_name?: boolean,
 }
 
 export function newAssetDefinitionInput(): AssetDefinitionInput {
@@ -189,6 +189,7 @@ export class UpdateAssetDefinition extends ContractMsg {
     constructor(assetDefinition: QueryAssetDefinitionResponse = newDefinition()) {
         super()
         this.update_asset_definition.asset_definition = newAssetDefinitionInputFromAssetDefinition(assetDefinition)
+        delete this.update_asset_definition.asset_definition.bind_name
     }
 
     setScopeSpecUuid(scope_spec_uuid: string): UpdateAssetDefinition {

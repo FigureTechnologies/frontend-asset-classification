@@ -19,7 +19,6 @@ export const TransactionHandler: FunctionComponent<TransactionHandlerProps> = ()
     const invalidateAssetDefinitions = useInvalidateAssetDefinitions()
 
     const handleTransaction = useCallback(async (tx: string) => {
-        console.log('handling transaction')
         try {
             await wcs.customAction({
                 message: Buffer.from(new Any().setTypeUrl(MSG_EXECUTE_CONTRACT_TYPE).setValue(tx).serializeBinary()).toString('base64'),

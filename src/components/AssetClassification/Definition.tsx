@@ -74,9 +74,10 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         setDirty(!deepEqual(definition, originalDefinition, { strict: true }))
     }
 
-    const isNonVerifierDirty = useMemo(() =>
-        !deepEqual({ ...definition, verifiers: [] }, { ...originalDefinition, verifiers: [] })
-    , [dirty, params])
+    const isNonVerifierDirty = useMemo(() => {
+        console.log('re-calculating if definition is dirty somewhere besides in verifier array', params)
+        return !deepEqual({ ...definition, verifiers: [] }, { ...originalDefinition, verifiers: [] })
+    }, [params, definition, originalDefinition])
 
     const updateParam = (key: string, value: any) => {
         setParams({
