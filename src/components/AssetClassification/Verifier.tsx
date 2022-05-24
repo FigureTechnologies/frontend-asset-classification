@@ -44,16 +44,21 @@ interface AssetVerifierProps {
     creating?: boolean,
     service: AssetClassificationContractService,
     newDefinition?: boolean,
+    definitionDirty?: boolean,
     requestRemoval?: () => any,
+    onChange?: (verifier: VerifierDetail) => any,
 }
+
+const getOnboardingCost = (verifier: VerifierDetail): string => `${verifier.onboarding_cost}${verifier.onboarding_denom}`
 
 const intitialState = (verifier: VerifierDetail) => ({
     address: verifier.address,
-    onboardingCost: `${verifier.onboarding_cost}${verifier.onboarding_denom}`,
+    onboardingCost: getOnboardingCost(verifier),
     fee_destinations: verifier.fee_destinations
 })
 
-export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_type, verifier, editable, creating = false, newDefinition, service, requestRemoval = () => {} }) => {
+
+export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_type, verifier, editable, creating = false, newDefinition, definitionDirty, service, onChange = (v) => {}, requestRemoval = () => {} }) => {
     // todo: edit handler at this level for individual asset verifier update
 
     const { walletConnectState } = useWalletConnect()
@@ -61,9 +66,14 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
 
     const [originalVerifier, setOriginalVerifier] = useState(verifier)
     const [dirty, setDirty] = useState(false)
-    const [onboardingCost, setOnboardingCost] = useState(`${verifier.onboarding_cost}${verifier.onboarding_denom}`)
+    const [onboardingCost, setOnboardingCost] = useState(getOnboardingCost(verifier))
 
     const [params, setParams] = useState(intitialState(verifier))
+
+    const handleChange = () => {
+        setDirty(!deepEqual(verifier, originalVerifier, { strict: true }))
+        onChange(verifier)
+    }
 
     const updateParam = (key: string, value: any) => {
         setParams({
@@ -77,20 +87,17 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
     useEffect(() => {
         setOriginalVerifier(deepcopy(verifier))
         setParams(intitialState(verifier))
+        setOnboardingCost(getOnboardingCost(verifier))
         if (!verifier.entity_detail) {
             verifier.entity_detail = newEntityDetail()
         }
     }, [verifier])
 
-    const handleChange = () => {
-        setDirty(!deepEqual(verifier, originalVerifier, { strict: true }))
-    }
-
     const handleCostChange = (cost: string) => {
         const match = /(?<cost>[0-9]*)(?<denom>[a-zA-Z]*)/.exec(cost)
         verifier.onboarding_cost = (match?.groups && match.groups['cost']) || '0'
         verifier.onboarding_denom = (match?.groups && match.groups['denom']) || ''
-        setOnboardingCost(`${verifier.onboarding_cost}${verifier.onboarding_denom}`)
+        setOnboardingCost(getOnboardingCost(verifier))
         handleChange()
     }
 
@@ -123,7 +130,7 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
             <H5>Fee Destinations {editable && <AddButton onClick={addFeeDestination} style={{float: "right"}} title="Add Fee Destination" />}</H5>
             {verifier.fee_destinations.length === 0 ? 'No Fee Destinations' : verifier.fee_destinations.map(destination => <FeeDestinationDetails key={destination.address} destination={destination} editable={editable} handleChange={handleChange} requestRemoval={() => updateParam('fee_destinations', params.fee_destinations.filter(d => d !== destination))} />)}
         </FeeDestinations>
-        {!newDefinition && !creating && editable && dirty && <ActionContainer><Button onClick={handleUpdate}>Update</Button></ActionContainer>}
+        {!newDefinition && !creating && editable && dirty && !definitionDirty && <ActionContainer><Button onClick={handleUpdate}>Update Verifier</Button></ActionContainer>}
         {!newDefinition && creating && <ActionContainer><Button onClick={handleCreate}>Add Verifier</Button></ActionContainer>}
     </AssetVerifierWrapper>
 }

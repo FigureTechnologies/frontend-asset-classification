@@ -1,6 +1,6 @@
 import { useWalletConnect, WINDOW_MESSAGES } from "@provenanceio/walletconnect-js"
 import deepcopy from "deepcopy"
-import { FunctionComponent, useState, useEffect } from "react"
+import { FunctionComponent, useState, useEffect, useMemo } from "react"
 import styled from "styled-components"
 import { WHITE, DARK_BG } from "../../constants"
 import { QueryAssetDefinitionResponse, VerifierDetail, newVerifier } from "../../models"
@@ -66,14 +66,17 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         const callback = () => {
             setVerifierToAdd(null)
         }
-        console.log('adding listener for verifier add')
         wcs.addListener(WINDOW_MESSAGES.CUSTOM_ACTION_COMPLETE, callback)
-        return () => { console.log('removing listener for verifier add'); wcs.removeListener(WINDOW_MESSAGES.CUSTOM_ACTION_COMPLETE, callback)}
+        return () => wcs.removeListener(WINDOW_MESSAGES.CUSTOM_ACTION_COMPLETE, callback)
     }, [wcs])
 
     const handleChange = () => {
         setDirty(!deepEqual(definition, originalDefinition, { strict: true }))
     }
+
+    const isNonVerifierDirty = useMemo(() =>
+        !deepEqual({ ...definition, verifiers: [] }, { ...originalDefinition, verifiers: [] })
+    , [dirty, params])
 
     const updateParam = (key: string, value: any) => {
         setParams({
@@ -123,9 +126,18 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         </DefinitionDetails>
         <AssetVerifiers>
             <H4>Asset Verifiers {editable && <AddButton onClick={handleAdd} style={{float: 'right'}} title={`Add Asset Verifier for ${params.asset_type}`}/>}</H4>
-            {definition.verifiers.length === 0 ? 'No Asset Verifiers' : definition.verifiers.map(verifier => <AssetVerifier key={verifier.address} asset_type={definition.asset_type} verifier={verifier} editable={editable} service={service} newDefinition={creating} requestRemoval={() => requestVerifierRemoval(verifier)} />)}
+            {definition.verifiers.length === 0 ? 'No Asset Verifiers' : definition.verifiers.map(verifier => <AssetVerifier key={verifier.address}
+                asset_type={definition.asset_type}
+                verifier={verifier}
+                editable={editable}
+                service={service}
+                newDefinition={creating}
+                definitionDirty={isNonVerifierDirty}
+                onChange={(verifier) => updateParam('verifiers', definition.verifiers.map(v => v.address === verifier.address ? verifier : v))}
+                requestRemoval={() => requestVerifierRemoval(verifier)}
+            />)}
         </AssetVerifiers>
-        {!creating && editable && dirty && <ActionContainer><Button onClick={handleUpdate}>Update</Button></ActionContainer>}
+        {!creating && editable && dirty && isNonVerifierDirty && <ActionContainer><Button onClick={handleUpdate}>Update Definition</Button></ActionContainer>}
         {verifierToAdd && <Modal requestClose={() => setVerifierToAdd(null)}><AssetVerifier asset_type={definition.asset_type} verifier={verifierToAdd} editable creating service={service} /> </Modal>}
         {creating && <ActionContainer><Button onClick={handleCreate}>Add Definition</Button></ActionContainer>}
         {verifierToRemove && <Modal requestClose={() => setVerifierToRemove(undefined)}>
