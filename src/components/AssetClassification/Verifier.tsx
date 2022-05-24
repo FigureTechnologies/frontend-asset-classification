@@ -114,7 +114,7 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
     }
 
     return <AssetVerifierWrapper>
-        {!creating && <DeleteVerifierButton onClick={requestRemoval} title="Remove Asset Verifier" />}
+        {!creating && editable && <DeleteVerifierButton onClick={requestRemoval} title="Remove Asset Verifier" />}
         <AssetVerifierDetails>
             <InputOrDisplay label="Verifier Address" value={params.address} editable={editable} onChange={(e) => { updateParam('address', e.target.value) }} />
             <InputOrDisplay label="Onboarding Cost" value={onboardingCost} editable={editable} onChange={(e) => handleCostChange(e.target.value)} />
