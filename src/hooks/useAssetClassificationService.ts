@@ -6,6 +6,6 @@ export const useAssetClassificationService = () => {
     const networkConfig = useNetworkConfig()
 
     return useMemo(() => {
-        return new AssetClassificationContractService(networkConfig.grpcUrl)
+        return new AssetClassificationContractService(networkConfig.grpcUrl, networkConfig.contractAlias)
     }, [networkConfig])
 }

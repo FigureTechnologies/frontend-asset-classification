@@ -5,13 +5,14 @@ import styled from "styled-components"
 import { WHITE, DARK_BG } from "../../constants"
 import { QueryAssetDefinitionResponse, VerifierDetail, newVerifier } from "../../models"
 import { AssetClassificationContractService } from "../../services"
-import { ActionContainer, AddButton, Button } from "../Button"
+import { ActionContainer, AddButton, Button, RemoveButton } from "../Button"
 import { H4 } from "../Headers"
 import { InputOrDisplay } from "../Input"
 import { Modal } from "../Modal"
 import { AssetVerifier } from "./Verifier"
 import deepEqual from "deep-equal";
 import { useTransaction } from "../../hooks"
+import { Action } from "history"
 
 const DefinitionWrapper = styled.div<{ border: boolean }>`
     padding: 20px;
@@ -19,6 +20,14 @@ const DefinitionWrapper = styled.div<{ border: boolean }>`
     background: ${WHITE};
     border-radius: 5px;
     border: ${({ border }) => border && `1px solid ${DARK_BG}`};
+    position: relative;
+`
+
+const DeleteDefinitionButton = styled(RemoveButton)`
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
 `
 
 const DefinitionDetails = styled.div`
@@ -50,16 +59,26 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
 
 
     const [dirty, setDirty] = useState(false)
+    const [isNonVerifierDirty, setIsNonVerifierDirty] = useState(false)
     const [originalDefinition, setOriginalDefinition] = useState(definition)
     const [verifierToAdd, setVerifierToAdd] = useState<VerifierDetail | null>(null)
     const [bindName, setBindName] = useState(true)
     const [verifierToRemove, setVerifierToRemove] = useState<VerifierDetail>()
+    const [deletingAssetDefinition, setDeletingAssetDefinition] = useState(false)
 
     const [params, setParams] = useState(initialState(definition))
 
+
+    const calculateIsNonVerifierDirty = (curr: QueryAssetDefinitionResponse, original: QueryAssetDefinitionResponse) => {
+        return !deepEqual({ ...curr, verifiers: [] }, { ...original, verifiers: [] })
+    }
+
     useEffect(() => {
-        setOriginalDefinition(deepcopy(definition))
+        console.log('performing deep copy of', definition.asset_type)
+        const originalDef = deepcopy(definition)
+        setOriginalDefinition(originalDef)
         setParams(initialState(definition))
+        setIsNonVerifierDirty(calculateIsNonVerifierDirty(definition, originalDef))
     }, [definition])
 
     useEffect(() => {
@@ -74,11 +93,6 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         setDirty(!deepEqual(definition, originalDefinition, { strict: true }))
     }
 
-    const isNonVerifierDirty = useMemo(() => {
-        console.log('re-calculating if definition is dirty somewhere besides in verifier array', params)
-        return !deepEqual({ ...definition, verifiers: [] }, { ...originalDefinition, verifiers: [] })
-    }, [params, definition, originalDefinition])
-
     const updateParam = (key: string, value: any) => {
         setParams({
             ...params,
@@ -86,6 +100,7 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         });
         (definition as any)[key] = value
         handleChange()
+        setIsNonVerifierDirty(calculateIsNonVerifierDirty(definition, originalDefinition))
     }
 
     const handleUpdate = async () => {
@@ -95,6 +110,11 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
 
     const handleCreate = async () => {
         const message = await service.getAddAssetDefinitionMessage(definition, bindName, walletConnectState.address)
+        setTransaction(message)
+    }
+
+    const handleDelete = async () => {
+        const message = await service.getDeleteAssetDefinitionMessage(definition.asset_type, walletConnectState.address)
         setTransaction(message)
     }
 
@@ -119,6 +139,7 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
     }
 
     return <DefinitionWrapper border={!creating}>
+        <DeleteDefinitionButton title="Delete Asset Definition" onClick={() => setDeletingAssetDefinition(true)} />
         <DefinitionDetails>
             <InputOrDisplay label="Asset Type" value={definition.asset_type} editable={creating} onChange={(e) => { updateParam('asset_type', e.target.value) }} />
             <InputOrDisplay label="Scope Spec Address" editable={editable} value={definition.scope_spec_address} onChange={(e) => { updateParam('scope_spec_address', e.target.value) }} />
@@ -145,7 +166,14 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
             {`Are you sure you want to remove verifier for ${definition.asset_type} with address ${verifierToRemove.address}?`}
             <ActionContainer>
                 <Button secondary onClick={() => setVerifierToRemove(undefined)}>Cancel</Button>
-                <Button onClick={() => handleRemoveVerifier(verifierToRemove)}>Yes, Remove</Button>
+                <Button onClick={() => handleRemoveVerifier(verifierToRemove)}>Yes, Remove Verifier</Button>
+            </ActionContainer>
+        </Modal>}
+        {deletingAssetDefinition && <Modal requestClose={() => setDeletingAssetDefinition(false)}>
+            {`Are you sure you want to delete the asset definition for asset type ${definition.asset_type}?`}
+            <ActionContainer>
+                <Button secondary onClick={() => setDeletingAssetDefinition(false)}>Cancel</Button>
+                <Button onClick={handleDelete}>Yes, Delete Assset Definition</Button>
             </ActionContainer>
         </Modal>}
     </DefinitionWrapper>

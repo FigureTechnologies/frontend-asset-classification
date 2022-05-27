@@ -1,7 +1,7 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { useAssetClassificationService, useAssetDefinitions, useInvalidateAssetDefinitions, useIsAdmin, useTransaction } from "../../hooks";
 import { newDefinition, QueryAssetDefinitionResponse } from "../../models";
-import { H3 } from "../Headers";
+import { H3, H4 } from "../Headers";
 import { AddButton } from "../Button";
 import { Modal } from "../Modal";
 import { TwoColumnFlex } from "../Layout";
@@ -51,6 +51,7 @@ export const AssetTypeConfig: FunctionComponent<AssetTypeConfigProps> = () => {
     return <div>
         <H3><TwoColumnFlex>Asset Definitions {editable && <AddButton onClick={handleAdd} title="Add Asset Definition" />}</TwoColumnFlex></H3>
         {assetDefinitions?.map(definition => <AssetDefinition key={definition.asset_type} definition={definition} editable={editable} service={service} />)}
+        {!assetDefinitions?.length && <H4>No Asset Definitions</H4>}
         {addingDefinition && <Modal requestClose={() => setAddingDefinition(null)}><AssetDefinition definition={addingDefinition} editable creating service={service} /></Modal>}
     </div>
 }
