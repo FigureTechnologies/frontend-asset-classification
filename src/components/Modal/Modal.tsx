@@ -35,6 +35,7 @@ const CloseButton = styled(RemoveButton)`
     position: absolute;
     top: 10px;
     right: 10px;
+    z-index: 101;
 `
 
 interface ModalProps {
