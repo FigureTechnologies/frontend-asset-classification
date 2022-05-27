@@ -1,6 +1,6 @@
 import { useWalletConnect, WINDOW_MESSAGES } from "@provenanceio/walletconnect-js"
 import deepcopy from "deepcopy"
-import { FunctionComponent, useState, useEffect, useMemo } from "react"
+import { FunctionComponent, useState, useEffect } from "react"
 import styled from "styled-components"
 import { WHITE, DARK_BG } from "../../constants"
 import { QueryAssetDefinitionResponse, VerifierDetail, newVerifier } from "../../models"
@@ -12,7 +12,6 @@ import { Modal } from "../Modal"
 import { AssetVerifier } from "./Verifier"
 import deepEqual from "deep-equal";
 import { useTransaction } from "../../hooks"
-import { Action } from "history"
 
 const DefinitionWrapper = styled.div<{ border: boolean }>`
     padding: 20px;
