@@ -138,7 +138,7 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
     }
 
     return <DefinitionWrapper border={!creating}>
-        <DeleteDefinitionButton title="Delete Asset Definition" onClick={() => setDeletingAssetDefinition(true)} />
+        {editable && !creating && <DeleteDefinitionButton title="Delete Asset Definition" onClick={() => setDeletingAssetDefinition(true)} />}
         <DefinitionDetails>
             <InputOrDisplay label="Asset Type" value={definition.asset_type} editable={creating} onChange={(e) => { updateParam('asset_type', e.target.value) }} />
             <InputOrDisplay label="Scope Spec Address" editable={editable} value={definition.scope_spec_address} onChange={(e) => { updateParam('scope_spec_address', e.target.value) }} />
@@ -168,7 +168,7 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
                 <Button onClick={() => handleRemoveVerifier(verifierToRemove)}>Yes, Remove Verifier</Button>
             </ActionContainer>
         </Modal>}
-        {deletingAssetDefinition && <Modal requestClose={() => setDeletingAssetDefinition(false)}>
+        {editable && !creating && deletingAssetDefinition && <Modal requestClose={() => setDeletingAssetDefinition(false)}>
             {`Are you sure you want to delete the asset definition for asset type ${definition.asset_type}?`}
             <ActionContainer>
                 <Button secondary onClick={() => setDeletingAssetDefinition(false)}>Cancel</Button>
