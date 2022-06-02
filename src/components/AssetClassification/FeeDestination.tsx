@@ -5,10 +5,16 @@ import { RemoveButton } from "../Button";
 import { InputOrDisplay } from "../Input";
 import { EntityDetailDisplay } from "./EntityDetailDisplay";
 
-const FeeDestinationWrapper = styled.div`
+const FeeDestinationControlWrapper = styled.div`
+    display: flex;
+    gap: 10px;
+`;
+
+const FeeDestinationContentWrapper = styled.div`
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr auto;
     grid-gap: 10px;
+    width: 100%;
     > * {
         display: flex;
         flex-direction: column;
@@ -45,10 +51,12 @@ export const FeeDestinationDetails: FunctionComponent<FeeDestinationDetailsProps
         handleChange()
     }
 
-    return <FeeDestinationWrapper>
-        <InputOrDisplay label="Address" value={destination.address} editable={editable} onChange={(e) => { updateParam('address', e.target.value) }} />
-        <InputOrDisplay label="Fee Amount" value={destination.fee_amount} editable={editable} onChange={(e) => { updateParam('fee_amount', e.target.value) }} />
-        <EntityDetailDisplay detail={destination.entity_detail as EntityDetail} editable={editable} handleChange={handleChange} />
+    return <FeeDestinationControlWrapper>
         {editable && <div><RemoveButton onClick={requestRemoval} /></div>}
-    </FeeDestinationWrapper>
+        <FeeDestinationContentWrapper>
+            <InputOrDisplay label="Address" value={destination.address} editable={editable} onChange={(e) => { updateParam('address', e.target.value) }} />
+            <InputOrDisplay label="Fee Amount" value={destination.fee_amount} editable={editable} onChange={(e) => { updateParam('fee_amount', e.target.value) }} />
+            <EntityDetailDisplay detail={destination.entity_detail as EntityDetail} editable={editable} handleChange={handleChange} />
+        </FeeDestinationContentWrapper>
+    </FeeDestinationControlWrapper>;
 }
