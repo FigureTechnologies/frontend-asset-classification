@@ -5,10 +5,10 @@ import { RemoveButton } from "../Button";
 import { InputOrDisplay } from "../Input";
 import { EntityDetailDisplay } from "./EntityDetailDisplay";
 
-const FeeDestinationControlWrapper = styled.div`
+const FeeDestinationControlWrapper = styled.div<{ isNotLastElement: boolean }>`
     display: flex;
     gap: 10px;
-    padding-bottom: 25px;
+    padding-bottom: ${({ isNotLastElement }) => isNotLastElement && '25px' };
 `;
 
 const FeeDestinationContentWrapper = styled.div`
@@ -26,11 +26,12 @@ const FeeDestinationContentWrapper = styled.div`
 interface FeeDestinationDetailsProps {
     destination: FeeDestination,
     editable: boolean,
+    isNotLastElement: boolean,
     handleChange: () => any,
     requestRemoval: () => any,
 }
 
-export const FeeDestinationDetails: FunctionComponent<FeeDestinationDetailsProps> = ({ destination, editable, handleChange, requestRemoval }) => {
+export const FeeDestinationDetails: FunctionComponent<FeeDestinationDetailsProps> = ({ destination, editable, isNotLastElement, handleChange, requestRemoval }) => {
     useEffect(() => {
         if (!destination.entity_detail) {
             destination.entity_detail = newEntityDetail();
@@ -52,7 +53,7 @@ export const FeeDestinationDetails: FunctionComponent<FeeDestinationDetailsProps
         handleChange()
     }
 
-    return <FeeDestinationControlWrapper>
+    return <FeeDestinationControlWrapper isNotLastElement={isNotLastElement}>
         {editable && <div><RemoveButton onClick={requestRemoval} /></div>}
         <FeeDestinationContentWrapper>
             <InputOrDisplay label="Address" value={destination.address} editable={editable} onChange={(e) => { updateParam('address', e.target.value) }} />
