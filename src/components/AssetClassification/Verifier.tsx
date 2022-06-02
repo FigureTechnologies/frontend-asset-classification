@@ -129,7 +129,7 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
         </AssetVerifierDetails>
         <FeeDestinations>
             <H5>Fee Destinations {editable && <AddButton onClick={addFeeDestination} style={{float: "right"}} title="Add Fee Destination" />}</H5>
-            {verifier.fee_destinations.length === 0 ? 'No Fee Destinations' : verifier.fee_destinations.map((destination, index) => <FeeDestinationDetails key={destination.address} destination={destination} editable={editable} isNotLastElement={index !== verifier.fee_destinations.length - 1} handleChange={handleChange} requestRemoval={() => updateParam('fee_destinations', params.fee_destinations.filter(d => d !== destination))} />)}
+            {verifier.fee_destinations.length === 0 ? 'No Fee Destinations' : verifier.fee_destinations.map(destination => <FeeDestinationDetails key={destination.address} destination={destination} editable={editable} handleChange={handleChange} requestRemoval={() => updateParam('fee_destinations', params.fee_destinations.filter(d => d !== destination))} />)}
         </FeeDestinations>
         {!newDefinition && !creating && editable && dirty && !definitionDirty && <ActionContainer><Button onClick={handleUpdate}>Update Verifier</Button></ActionContainer>}
         {!newDefinition && creating && <ActionContainer><Button onClick={handleCreate}>Add Verifier</Button></ActionContainer>}
