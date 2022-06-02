@@ -11,6 +11,7 @@ import { InputOrDisplay } from "../Input"
 import { FeeDestinationDetails } from "./FeeDestination"
 import deepEqual from "deep-equal";
 import { useTransaction } from "../../hooks"
+import { EntityDetailDisplay } from "./EntityDetailDisplay"
 
 const AssetVerifierWrapper = styled.div`
     position: relative;
@@ -124,7 +125,7 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
         <AssetVerifierDetails>
             <InputOrDisplay label="Verifier Address" value={params.address} editable={editable} onChange={(e) => { updateParam('address', e.target.value) }} />
             <InputOrDisplay label="Onboarding Cost" value={onboardingCost} editable={editable} onChange={(e) => handleCostChange(e.target.value)} />
-            <AssetVerifierDetail detail={verifier.entity_detail as EntityDetail} editable={editable} handleChange={handleChange} />
+            <EntityDetailDisplay detail={verifier.entity_detail as EntityDetail} editable={editable} handleChange={handleChange} />
         </AssetVerifierDetails>
         <FeeDestinations>
             <H5>Fee Destinations {editable && <AddButton onClick={addFeeDestination} style={{float: "right"}} title="Add Fee Destination" />}</H5>
@@ -133,45 +134,6 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
         {!newDefinition && !creating && editable && dirty && !definitionDirty && <ActionContainer><Button onClick={handleUpdate}>Update Verifier</Button></ActionContainer>}
         {!newDefinition && creating && <ActionContainer><Button onClick={handleCreate}>Add Verifier</Button></ActionContainer>}
     </AssetVerifierWrapper>
-}
-
-interface AssetVerifierDetailProps {
-    detail: EntityDetail,
-    editable: boolean,
-    handleChange: () => any
-}
-
-const initialState = (entityDetail: EntityDetail) => ({
-    name: entityDetail.name,
-    description: entityDetail.description,
-    home_url: entityDetail.home_url,
-    source_url: entityDetail.source_url,
-})
-
-const AssetVerifierDetail: FunctionComponent<AssetVerifierDetailProps> = ({ detail, editable, handleChange }) => {
-
-    const [params, setParams] = useState(initialState(detail))
-
-    useEffect(() => {
-        setParams(initialState(detail))
-
-    }, [detail])
-
-    const updateParam = (key: string, value: string) => {
-        setParams({
-            ...params,
-            [key]: value
-        });
-        (detail as any)[key] = value
-        handleChange()
-    }
-
-    return <>   
-        <InputOrDisplay label="Name" value={params.name} editable={editable} onChange={(e) => { updateParam('name', e.target.value) }} />
-        <InputOrDisplay label="Description" value={params.description} editable={editable} onChange={(e) => updateParam('description', e.target.value)} />
-        <InputOrDisplay label="Home URL" type="url" value={params.home_url} editable={editable} onChange={(e) => { updateParam('home_url', e.target.value) }} />
-        <InputOrDisplay label="Source URL" type="url" value={params.source_url} editable={editable} onChange={(e) => { updateParam('source_url', e.target.value) }} />
-    </>
 }
 
 const FeeDestinations = styled.div`

@@ -125,6 +125,7 @@ export function newEntityDetail(): EntityDetail {
 export interface FeeDestination {
     address: string,
     fee_amount: string,
+    entity_detail?: EntityDetail,
 }
 
 export interface EntityDetail {
