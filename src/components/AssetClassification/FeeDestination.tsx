@@ -8,6 +8,7 @@ import { EntityDetailDisplay } from "./EntityDetailDisplay";
 const FeeDestinationControlWrapper = styled.div`
     display: flex;
     gap: 10px;
+    padding-bottom: 25px;
 `;
 
 const FeeDestinationContentWrapper = styled.div`
