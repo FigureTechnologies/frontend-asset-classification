@@ -1,7 +1,7 @@
 import { MsgExecuteContract } from "@provenanceio/wallet-lib/lib/proto/cosmwasm/wasm/v1/tx_pb"
 import { PROD_GRPC_URL } from "../constants"
 import { TransactionMeta } from "../hooks"
-import { AddAssetDefinition, AddAssetVerifier, DeleteAssetDefinition, QueryAssetDefinition, QueryAssetDefinitionResponse, QueryAssetDefinitions, QueryAssetDefinitionsResponse, QueryContractConfig, QueryContractConfigResponse, UpdateAssetDefinition, UpdateAssetVerifier, VerifierDetail } from "../models"
+import { AddAssetDefinition, AddAssetVerifier, DeleteAssetDefinition, QueryAssetDefinitionResponse, QueryAssetDefinitions, QueryAssetDefinitionsResponse, QueryContractConfig, QueryContractConfigResponse, UpdateAssetDefinition, UpdateAssetVerifier, VerifierDetail } from "../models"
 import { WasmService } from "./WasmService"
 
 export class AssetClassificationContractService {
