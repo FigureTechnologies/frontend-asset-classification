@@ -19,6 +19,7 @@ export interface QueryAssetDefinitionResponse {
 
 export interface AssetDefinitionInput {
     asset_type: string,
+    display_name: string,
     verifiers: VerifierDetail[],
     enabled: boolean,
     bind_name?: boolean,
@@ -31,6 +32,7 @@ export function newAssetDefinitionInput(): AssetDefinitionInput {
 export function newAssetDefinitionInputFromAssetDefinition(assetDefinition: QueryAssetDefinitionResponse): AssetDefinitionInput {
     return {
         asset_type: assetDefinition.asset_type,
+        display_name: assetDefinition.display_name,
         verifiers: assetDefinition.verifiers,
         enabled: assetDefinition.enabled,
         bind_name: true,
@@ -227,9 +229,7 @@ export class QueryAssetDefinitions {
     public query_asset_definitions = {}
 }
 
-export interface QueryAssetDefinitionsResponse {
-    asset_definitions: QueryAssetDefinitionResponse[]
-}
+export type QueryAssetDefinitionsResponse = QueryAssetDefinitionResponse[]
 
 export class QueryContractConfig {
     public query_state = {}

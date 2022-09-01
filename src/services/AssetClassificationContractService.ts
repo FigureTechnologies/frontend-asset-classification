@@ -24,7 +24,7 @@ export class AssetClassificationContractService {
         return this.wasmService.queryWasmCustom<QueryContractConfig, QueryContractConfigResponse>(await this.getContractAddress(), new QueryContractConfig())
     }
 
-    async listInvoiceAssetDefinitions(): Promise<QueryAssetDefinitionsResponse> {
+    async listAssetDefinitions(): Promise<QueryAssetDefinitionsResponse> {
         return this.wasmService.queryWasmCustom<QueryAssetDefinitions, QueryAssetDefinitionsResponse>(await this.getContractAddress(), new QueryAssetDefinitions())
     }
 
