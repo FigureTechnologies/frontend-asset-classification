@@ -28,10 +28,6 @@ export class AssetClassificationContractService {
         return this.wasmService.queryWasmCustom<QueryAssetDefinitions, QueryAssetDefinitionsResponse>(await this.getContractAddress(), new QueryAssetDefinitions())
     }
 
-    async getInvoiceAssetDefinition(asset_type: string): Promise<QueryAssetDefinitionResponse> {
-        return this.wasmService.queryWasmCustom<QueryAssetDefinition, QueryAssetDefinitionResponse>(await this.getContractAddress(), QueryAssetDefinition.fromAssetType(asset_type))
-    }
-
     async getAddAssetDefinitionMessage(assetDefinition: QueryAssetDefinitionResponse, bindName: boolean, address: string): Promise<TransactionMeta> {
         const contractAddr = await this.getContractAddress()
         const msg = new AddAssetDefinition(assetDefinition)
@@ -65,7 +61,7 @@ export class AssetClassificationContractService {
 
     async getDeleteAssetDefinitionMessage(assetType: string, address: string): Promise<TransactionMeta> {
         const contractAddr = await this.getContractAddress()
-        const msg = DeleteAssetDefinition.fromAssetType(assetType)
+        const msg = new DeleteAssetDefinition(assetType)
         const message = new MsgExecuteContract()
             .setMsg(Buffer.from(msg.toJson(), 'utf-8').toString('base64'))
             .setFundsList([])

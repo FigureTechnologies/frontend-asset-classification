@@ -2,56 +2,23 @@ import { ContractMsg } from "./ContractBase"
 
 export class QueryAssetDefinition {
     public query_asset_definition: {
-        qualifier?: AssetQualifier
+        asset_type?: String
     } = {}
 
-    static fromAssetType(asset_type: string): QueryAssetDefinition {
-        return new QueryAssetDefinition().setAssetType(asset_type)
+    constructor(asset_type: string) {
+        this.query_asset_definition.asset_type = asset_type
     }
-
-    static fromScopeSpecAddress(scope_spec_address: string): QueryAssetDefinition {
-        return new QueryAssetDefinition().setScopeSpecAddress(scope_spec_address)
-    }
-
-    setAssetType(asset_type: string): QueryAssetDefinition {
-        this.query_asset_definition.qualifier = {
-            type: 'asset_type',
-            value: asset_type,
-        }
-        return this
-    }
-
-    setScopeSpecAddress(scope_spec_address: string): QueryAssetDefinition {
-        this.query_asset_definition.qualifier = {
-            type: 'scope_spec_address',
-            value: scope_spec_address,
-        }
-        return this
-    }
-}
-
-export type AssetQualifier = AssetTypeAssetQualifier | ScopeSpecAddressAssetQualifier
-
-export interface AssetTypeAssetQualifier {
-    type: 'asset_type',
-    value: string
-}
-
-export interface ScopeSpecAddressAssetQualifier {
-    type: 'scope_spec_address',
-    value: string
 }
 
 export interface QueryAssetDefinitionResponse {
     asset_type: string,
-    scope_spec_address: string,
+    display_name: string,
     verifiers: VerifierDetail[],
     enabled: boolean,
 }
 
 export interface AssetDefinitionInput {
     asset_type: string,
-    scope_spec_identifier: ScopeSpecIdentifier,
     verifiers: VerifierDetail[],
     enabled: boolean,
     bind_name?: boolean,
@@ -64,32 +31,16 @@ export function newAssetDefinitionInput(): AssetDefinitionInput {
 export function newAssetDefinitionInputFromAssetDefinition(assetDefinition: QueryAssetDefinitionResponse): AssetDefinitionInput {
     return {
         asset_type: assetDefinition.asset_type,
-        scope_spec_identifier: {
-            type: 'address',
-            value: assetDefinition.scope_spec_address
-        },
         verifiers: assetDefinition.verifiers,
         enabled: assetDefinition.enabled,
         bind_name: true,
     }
 }
 
-export type ScopeSpecIdentifier = UuidScopeSpecIdentifier | AddressScopeSpecIdentifier
-
-export interface UuidScopeSpecIdentifier {
-    type: 'uuid',
-    value: string,
-}
-
-export interface AddressScopeSpecIdentifier {
-    type: 'address',
-    value: string,
-}
-
 export function newDefinition(): QueryAssetDefinitionResponse {
     return {
         asset_type: '',
-        scope_spec_address: '',
+        display_name: '',
         verifiers: [],
         enabled: true,
     }
@@ -192,22 +143,6 @@ export class AddAssetDefinition extends ContractMsg {
         this.add_asset_definition.asset_definition = newAssetDefinitionInputFromAssetDefinition(assetDefinition)
     }
 
-    setScopeSpecUuid(scope_spec_uuid: string): AddAssetDefinition {
-        this.add_asset_definition.asset_definition.scope_spec_identifier = {
-            type: 'uuid',
-            value: scope_spec_uuid,
-        }
-        return this
-    }
-    
-    setScopeSpecAddress(scope_spec_address: string): AddAssetDefinition {
-        this.add_asset_definition.asset_definition.scope_spec_identifier = {
-            type: 'address',
-            value: scope_spec_address,
-        }
-        return this
-    }
-
     setBindName(bindName: boolean): AddAssetDefinition {
         this.add_asset_definition.asset_definition.bind_name = bindName
         return this
@@ -224,51 +159,16 @@ export class UpdateAssetDefinition extends ContractMsg {
         this.update_asset_definition.asset_definition = newAssetDefinitionInputFromAssetDefinition(assetDefinition)
         delete this.update_asset_definition.asset_definition.bind_name
     }
-
-    setScopeSpecUuid(scope_spec_uuid: string): UpdateAssetDefinition {
-        this.update_asset_definition.asset_definition.scope_spec_identifier = {
-            type: 'uuid',
-            value: scope_spec_uuid,
-        }
-        return this
-    }
-    
-    setScopeSpecAddress(scope_spec_address: string): UpdateAssetDefinition {
-        this.update_asset_definition.asset_definition.scope_spec_identifier = {
-            type: 'address',
-            value: scope_spec_address,
-        }
-        return this
-    }
 }
 
 export class DeleteAssetDefinition extends ContractMsg {
     delete_asset_definition: {
-        qualifier?: AssetQualifier,
+        asset_type?: String,
     } = {}
 
-    static fromAssetType(asset_type: string): DeleteAssetDefinition {
-        return new DeleteAssetDefinition().setAssetType(asset_type)
-    }
-
-    static fromScopeSpecAddress(scope_spec_address: string): DeleteAssetDefinition {
-        return new DeleteAssetDefinition().setScopeSpecAddress(scope_spec_address)
-    }
-
-    setAssetType(asset_type: string): DeleteAssetDefinition {
-        this.delete_asset_definition.qualifier = {
-            type: 'asset_type',
-            value: asset_type,
-        }
-        return this
-    }
-
-    setScopeSpecAddress(scope_spec_address: string): DeleteAssetDefinition {
-        this.delete_asset_definition.qualifier = {
-            type: 'scope_spec_address',
-            value: scope_spec_address,
-        }
-        return this
+    constructor(asset_type: string) {
+        super()
+        this.delete_asset_definition.asset_type = asset_type
     }
 }
 
