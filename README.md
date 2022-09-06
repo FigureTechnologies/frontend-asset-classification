@@ -1,10 +1,24 @@
-# Getting Started with Create React App
+# Frontend Asset Classification
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a small dApp frontend for viewing/managing the configuration of the Figure [Asset Classification Smart Contract](https://github.com/FigureTechnologies/asset-classification-smart-contract).
 
-## Available Scripts
+When not connected to a wallet (or connected to a wallet that is not the contract's admin account), this UI will display a listing of the various asset types configured within the testnet/mainnet contract
+instances, as well as the details of fees and verifiers for each asset type.
 
-In the project directory, you can run:
+When connected to the admin's wallet, this configuration is editable and asset types can be added/removed.
+
+## Testnet/Mainnet
+
+There is a ui toggle (bottom of the page)/page route for switching between the testnet/mainnet contract instances so that both versions can be hosted via GitHub Pages.
+
+## GitHub Pages
+
+This UI is hosted on GitHub pages at [https://figuretechnologies.github.io/frontend-asset-classification](https://figuretechnologies.github.io/frontend-asset-classification). Branches can be deployed
+with the [Build and Deploy GitHub Action](.github/workflows/publish-github-pages.yml).
+
+## Local Development
+
+In the project directory, you can start a development server with the following command:
 
 ### `npm start`
 
@@ -13,34 +27,3 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
