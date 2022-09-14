@@ -1,7 +1,7 @@
 import { MsgExecuteContract } from "@provenanceio/wallet-lib/lib/proto/cosmwasm/wasm/v1/tx_pb"
 import { PROD_GRPC_URL } from "../constants"
 import { TransactionMeta } from "../hooks"
-import { AddAssetDefinition, AddAssetVerifier, DeleteAssetDefinition, QueryAssetDefinition, QueryAssetDefinitionResponse, QueryAssetDefinitions, QueryAssetDefinitionsResponse, QueryContractConfig, QueryContractConfigResponse, UpdateAssetDefinition, UpdateAssetVerifier, VerifierDetail } from "../models"
+import { AddAssetDefinition, AddAssetVerifier, DeleteAssetDefinition, QueryAssetDefinitionResponse, QueryAssetDefinitions, QueryAssetDefinitionsResponse, QueryContractConfig, QueryContractConfigResponse, UpdateAssetDefinition, UpdateAssetVerifier, VerifierDetail } from "../models"
 import { WasmService } from "./WasmService"
 
 export class AssetClassificationContractService {
@@ -24,12 +24,8 @@ export class AssetClassificationContractService {
         return this.wasmService.queryWasmCustom<QueryContractConfig, QueryContractConfigResponse>(await this.getContractAddress(), new QueryContractConfig())
     }
 
-    async listInvoiceAssetDefinitions(): Promise<QueryAssetDefinitionsResponse> {
+    async listAssetDefinitions(): Promise<QueryAssetDefinitionsResponse> {
         return this.wasmService.queryWasmCustom<QueryAssetDefinitions, QueryAssetDefinitionsResponse>(await this.getContractAddress(), new QueryAssetDefinitions())
-    }
-
-    async getInvoiceAssetDefinition(asset_type: string): Promise<QueryAssetDefinitionResponse> {
-        return this.wasmService.queryWasmCustom<QueryAssetDefinition, QueryAssetDefinitionResponse>(await this.getContractAddress(), QueryAssetDefinition.fromAssetType(asset_type))
     }
 
     async getAddAssetDefinitionMessage(assetDefinition: QueryAssetDefinitionResponse, bindName: boolean, address: string): Promise<TransactionMeta> {
@@ -65,7 +61,7 @@ export class AssetClassificationContractService {
 
     async getDeleteAssetDefinitionMessage(assetType: string, address: string): Promise<TransactionMeta> {
         const contractAddr = await this.getContractAddress()
-        const msg = DeleteAssetDefinition.fromAssetType(assetType)
+        const msg = new DeleteAssetDefinition(assetType)
         const message = new MsgExecuteContract()
             .setMsg(Buffer.from(msg.toJson(), 'utf-8').toString('base64'))
             .setFundsList([])

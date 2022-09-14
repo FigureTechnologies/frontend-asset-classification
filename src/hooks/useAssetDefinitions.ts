@@ -7,7 +7,7 @@ export const useAssetDefinitions = () => {
     const networkConfig = useNetworkConfig()
     const service = useAssetClassificationService()
     return useQuery(['network', networkConfig.network, 'asset-definitions'], async () => {
-        return (await service.listInvoiceAssetDefinitions()).asset_definitions
+        return await service.listAssetDefinitions()
     }, {
         staleTime: Infinity
     })

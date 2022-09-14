@@ -47,7 +47,7 @@ interface AssetDefinitionProps {
 
 const initialState = (definition: QueryAssetDefinitionResponse) => ({
     asset_type: definition.asset_type,
-    scope_spec_address: definition.scope_spec_address,
+    display_name: definition.display_name,
     verifiers: definition.verifiers,
     enabled: definition.enabled,
 })
@@ -141,7 +141,7 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         {editable && !creating && <DeleteDefinitionButton title="Delete Asset Definition" onClick={() => setDeletingAssetDefinition(true)} />}
         <DefinitionDetails>
             <InputOrDisplay label="Asset Type" value={definition.asset_type} editable={creating} onChange={(e) => { updateParam('asset_type', e.target.value) }} />
-            <InputOrDisplay label="Scope Spec Address" editable={editable} value={definition.scope_spec_address} onChange={(e) => { updateParam('scope_spec_address', e.target.value) }} />
+            <InputOrDisplay label="Display Name" value={definition.display_name} editable={editable} onChange={(e) => { updateParam('display_name', e.target.value) }} />
             <InputOrDisplay label="Enabled" editable={editable} checked={params.enabled} value={`${definition.enabled}`} type="checkbox" onChange={(e) => { updateParam('enabled', e.target.checked) }} />
             {creating && <InputOrDisplay label="Bind Name" editable checked={bindName} type="checkbox" onChange={(e) => { setBindName(e.target.checked) }} />}
         </DefinitionDetails>

@@ -1,6 +1,6 @@
 # This workflow will publish the latest master branch to github pages
 
-name: Node.js Package
+name: Build and Deploy
 
 on:
   push:
