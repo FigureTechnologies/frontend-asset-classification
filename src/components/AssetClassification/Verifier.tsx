@@ -3,7 +3,7 @@ import deepcopy from "deepcopy"
 import { FunctionComponent, useState, useEffect } from "react"
 import styled from "styled-components"
 import { DARK_TEXT } from "../../constants"
-import { VerifierDetail, newEntityDetail, OnboardingCost, newOnboardingCost, newFeeDestination, newSubsequentClassificationDetail } from "../../models"
+import { VerifierDetail, newEntityDetail, OnboardingCost, newOnboardingCost, newFeeDestination } from "../../models"
 import { AssetClassificationContractService } from "../../services"
 import { ActionContainer, AddButton, Button, IconButtonBody, RemoveButton } from "../Button"
 import { H5, H6 } from "../Headers"
@@ -105,34 +105,6 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
         updateVerifierField('fee_destinations', [...updatedVerifier.fee_destinations, newFeeDestination()])
     }
 
-    const addRetryCost = () => {
-        updateVerifierField('retry_cost', newOnboardingCost())
-    }
-
-    const removeRetryCost = () => {
-        updateVerifierField('retry_cost', undefined)
-    }
-
-    const addRetryCostFeeDestination = () => {
-        updateVerifierField('retry_cost.fee_destinations', [...(updatedVerifier.retry_cost?.fee_destinations || []), newFeeDestination()])
-    }
-
-    const addSubsequentClassificationDetail = () => {
-        updateVerifierField('subsequent_classification_detail', newSubsequentClassificationDetail())
-    }
-
-    const removeSubsequentClassificationDetail = () => {
-        updateVerifierField('subsequent_classification_detail', undefined)
-    }
-
-    const addSubsequentClassificationCost = () => {
-        updateVerifierField('subsequent_classification_detail.cost', newOnboardingCost())
-    }
-
-    const removeSubsequentClassificationCost = () => {
-        updateVerifierField('subsequent_classification_detail.cost', undefined)
-    }
-
     return <AssetVerifierWrapper>
         {!creating && editable && <DeleteVerifierButton onClick={requestRemoval} title="Remove Asset Verifier" />}
         <AssetVerifierDetails>
@@ -173,7 +145,7 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
                         editable={editable}
                         onChange={(e) => { updateVerifierField(`subsequent_classification_detail.applicable_asset_types.${i}`, e.target.value)}} 
                     />
-                    <RemoveButton onClick={() => updateVerifierField('subsequent_classification_detail.applicable_asset_types', arrayOrUndefined(updatedVerifier.subsequent_classification_detail?.applicable_asset_types?.filter((_, j) => i !== j)))} style={{ alignSelf: 'flex-end' }} title={`Remove Applicable Asset Type`} />
+                    {editable && <RemoveButton onClick={() => updateVerifierField('subsequent_classification_detail.applicable_asset_types', arrayOrUndefined(updatedVerifier.subsequent_classification_detail?.applicable_asset_types?.filter((_, j) => i !== j)))} style={{ alignSelf: 'flex-end' }} title={`Remove Applicable Asset Type`} />}
                 </HeaderContainer>)}
                 
             </OnboardingCostManager>
@@ -204,7 +176,7 @@ const OnboardingCostManager: FunctionComponent<OnboardingCostManagerProps> = ({ 
         {onboardingCost && <>
             <HeaderContainer>
                 <InputOrDisplay label="Cost" value={onboardingCost?.cost || ''} editable={editable} onChange={(e) => { updateCost('cost', e.target.value) }} />
-                <AddButton onClick={() => updateCost('fee_destinations', [...onboardingCost.fee_destinations, newFeeDestination()])} style={{ alignSelf: 'flex-end' }} title={`Add ${title} Fee Destination`} />
+                {editable && <AddButton onClick={() => updateCost('fee_destinations', [...onboardingCost.fee_destinations, newFeeDestination()])} style={{ alignSelf: 'flex-end' }} title={`Add ${title} Fee Destination`} />}
             </HeaderContainer>
             {children}
             <H5>Fee Destinations</H5>
