@@ -1,38 +1,23 @@
-import { FunctionComponent, useEffect, useState } from "react";
-import { EntityDetail } from "../../models"
+import { FunctionComponent } from "react";
+import { EntityDetail, newEntityDetail } from "../../models"
+import { deepReplace } from "../../utils";
 import { InputOrDisplay } from "../Input";
 
 interface EntityDetailProps {
-    detail: EntityDetail,
+    detail?: EntityDetail,
     editable: boolean,
-    handleChange: () => any,
+    detailChanged: (detail: EntityDetail) => any,
 }
 
-const initialState = (entityDetail?: EntityDetail) => ({
-    name: entityDetail?.name || '',
-    description: entityDetail?.description || '',
-    home_url: entityDetail?.home_url || '',
-    source_url: entityDetail?.source_url || '',
-})
-
-export const EntityDetailDisplay: FunctionComponent<EntityDetailProps> = ({ detail, editable, handleChange }) => {
-    const [params, setParams] = useState(initialState(detail));
-
-    useEffect(() => setParams(initialState(detail)), [detail]);
-
-    const updateParam = (key: string, value: string) => {
-        setParams({
-            ...params,
-            [key]: value,
-        });
-        (detail as any)[key] = value;
-        handleChange();
+export const EntityDetailDisplay: FunctionComponent<EntityDetailProps> = ({ detail, editable, detailChanged }) => {
+    const handleChange = (key: string, value: string) => {
+        detailChanged(deepReplace(detail || newEntityDetail(), key, value))
     };
 
     return <>
-        <InputOrDisplay label="Name" value={params.name} editable={editable} onChange={(e) => { updateParam('name', e.target.value) }} />
-        <InputOrDisplay label="Description" value={params.description} editable={editable} onChange={(e) => { updateParam('description', e.target.value) }} />
-        <InputOrDisplay label="Home URL" type="url" value={params.home_url} editable={editable} onChange={(e) => { updateParam('home_url', e.target.value) }} />
-        <InputOrDisplay label="Source URL" type="url" value={params.source_url} editable={editable} onChange={(e) => { updateParam('source_url', e.target.value) }} />
+        <InputOrDisplay label="Name" value={detail?.name || ''} editable={editable} onChange={(e) => { handleChange('name', e.target.value) }} />
+        <InputOrDisplay label="Description" value={detail?.description || ''} editable={editable} onChange={(e) => { handleChange('description', e.target.value) }} />
+        <InputOrDisplay label="Home URL" type="url" value={detail?.home_url || ''} editable={editable} onChange={(e) => { handleChange('home_url', e.target.value) }} />
+        <InputOrDisplay label="Source URL" type="url" value={detail?.source_url || ''} editable={editable} onChange={(e) => { handleChange('source_url', e.target.value) }} />
     </>;
 }
