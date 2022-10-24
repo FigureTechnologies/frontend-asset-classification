@@ -37,6 +37,7 @@ export const LoginManager: FunctionComponent<LoginManagerProps> = () => {
             walletConnectService={wcs}
             walletConnectState={walletConnectState}
             title="Scan to initiate walletConnect-js session"
+            devWallets={["figure_web", "provenance_extension"]}
           />
     </>
 }

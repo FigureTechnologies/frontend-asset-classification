@@ -40,20 +40,16 @@ export const TransactionHandler: FunctionComponent<TransactionHandlerProps> = ()
 
     useEffect(() => {
         const completeListener = (res: BroadcastResults) => {
-            console.log('CUSTOM_ACTION_COMPLETE', res)
             setTransaction()
             invalidateAssetDefinitions()
         }
         wcs.addListener(WINDOW_MESSAGES.CUSTOM_ACTION_COMPLETE, completeListener)
-        const failedListener = (res: BaseResults) => {
-            console.log('CUSTOM_ACTION_FAILED', res)
+        const failedListener = (res: BroadcastResults) => {
             setTransaction()
-            setError(`Transaction Error: ${res.error}`)
+            setError(`Transaction Error: ${(res as BaseResults).error}`)
         }
         wcs.addListener(WINDOW_MESSAGES.CUSTOM_ACTION_FAILED, failedListener)
-        console.log('listeners registered')
         return () => {
-            console.log('removing listeners')
             wcs.removeListener(WINDOW_MESSAGES.CUSTOM_ACTION_COMPLETE, completeListener)
             wcs.removeListener(WINDOW_MESSAGES.CUSTOM_ACTION_FAILED, failedListener)
         }

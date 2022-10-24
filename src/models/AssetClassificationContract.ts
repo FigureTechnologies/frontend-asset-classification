@@ -49,11 +49,27 @@ export function newDefinition(): QueryAssetDefinitionResponse {
 }
 
 export interface VerifierDetail {
+    /// The Provenance Blockchain bech32 address of the verifier account.
     address: string,
+    /// The total amount charged to use the onboarding process this this verifier.
     onboarding_cost: string,
+    /// The coin denomination used for this onboarding process.
     onboarding_denom: string,
+    /// Each account that should receive fees when onboarding a new scope to the contract.
+    /// All of these destinations' individual [fee_amount](super::fee_destination::FeeDestinationV2::fee_amount) properties
+    /// should sum to an amount less than or equal to the [onboarding_cost](super::verifier_detail::VerifierDetailV2::onboarding_cost).
+    /// Amounts not precisely equal in sum will cause this verifier detail to be considered invalid
+    /// and rejected in requests that include it.
     fee_destinations: FeeDestination[],
+    /// An optional set of fields that define the verifier, including its name and home URL location.
     entity_detail?: EntityDetail,
+    /// Defines the cost to use in place of the root onboarding_cost and fee_destinations when
+    /// retrying classification for a failed verification.  If not present, the original values
+    /// used for the first verification will be used.
+    retry_cost?: OnboardingCost,
+    /// An optional set of fields that define behaviors when classification is being run for an
+    /// asset that is already classified as a different type.
+    subsequent_classification_detail?: SubsequentClassificationDetail,
 }
 
 export function newVerifier(): VerifierDetail {
@@ -79,6 +95,44 @@ export interface FeeDestination {
     address: string,
     fee_amount: string,
     entity_detail?: EntityDetail,
+}
+
+export function newFeeDestination(): FeeDestination {
+    return {
+        address: '',
+        fee_amount: ''
+    }
+}
+
+export interface OnboardingCost {
+    /// The amount of coin to be paid when an asset is sent to the onboard_asset execute function.
+    cost: string,
+    /// Any specific fee destinations that should be sent to sources other than the selected verifier.
+    fee_destinations: FeeDestination[],
+}
+
+export function newOnboardingCost(): OnboardingCost {
+    return {
+        cost: '',
+        fee_destinations: [],
+    }
+}
+
+export interface SubsequentClassificationDetail {
+    /// The onboarding cost to use when classifying an asset using the associated verifier after
+    /// having already classified it as a different type with the same verifier.  If not set, the
+    /// default verifier costs are used.
+    cost?: OnboardingCost,
+    /// Specifies the asset types that an asset can be to have the subsequent classification cost
+    /// apply to them.  If an asset has been classified as any of the types in this list, the cost
+    /// will be used.  If the list is supplied as a None variant, any subsequent classifications will
+    /// use the cost.  This value will be rejected if it is supplied as an empty vector.
+    applicable_asset_types?: string[],
+}
+
+export function newSubsequentClassificationDetail(): SubsequentClassificationDetail {
+    return {
+    }
 }
 
 export interface EntityDetail {

@@ -1,4 +1,3 @@
-import { Error as ServerError } from 'grpc-web';
 import { QueryClient as WasmQueryClient } from "@provenanceio/wallet-lib/lib/proto/cosmwasm/wasm/v1/query_grpc_web_pb";
 import { QuerySmartContractStateRequest } from "@provenanceio/wallet-lib/lib/proto/cosmwasm/wasm/v1/query_pb";
 import { QueryClient as NameQueryClient } from "@provenanceio/wallet-lib/lib/proto/provenance/name/v1/query_grpc_web_pb";
@@ -16,7 +15,7 @@ export class WasmService {
 
     lookupContractByName(name: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.nameQueryClient.resolve(new QueryResolveRequest().setName(name), null, (error: ServerError, res) => {
+            this.nameQueryClient.resolve(new QueryResolveRequest().setName(name), null, (error, res) => {
                 if (error) {
                     reject(new Error(`wasmService.lookupContractByName error: Code: ${error.code} Message: ${error.message}`))
                 } else {
@@ -32,7 +31,7 @@ export class WasmService {
             this.wasmQueryClient.smartContractState(new QuerySmartContractStateRequest()
                 .setAddress(contractAddress)
                 .setQueryData(queryData)
-                , null, (error: ServerError, res) => {
+                , null, (error, res) => {
                 if (error) {
                     reject(new Error(`wasmService.queryWasmCustom error: Code: ${error.code} Message: ${error.message}`))
                 } else {
