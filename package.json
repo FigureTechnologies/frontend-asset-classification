@@ -7,7 +7,7 @@
     "@provenanceio/wallet-lib": "^2.4.3",
     "@provenanceio/walletconnect-js": "^1.2.11",
     "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^12.1.4",
+    "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.1",
     "@types/node": "^16.11.36",
