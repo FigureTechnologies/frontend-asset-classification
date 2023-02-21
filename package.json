@@ -5,7 +5,7 @@
   "homepage": "http://provenance-io.github.io/frontend-asset-classification",
   "dependencies": {
     "@provenanceio/wallet-lib": "^2.4.3",
-    "@provenanceio/walletconnect-js": "^1.2.11",
+    "@provenanceio/walletconnect-js": "^2.0.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
