@@ -1,6 +1,6 @@
 import { useWalletConnect } from "@provenanceio/walletconnect-js"
 import { Any } from "google-protobuf/google/protobuf/any_pb"
-import { useMutation, useQueryClient } from "react-query"
+import { useMutation, useQuery, useQueryClient } from "react-query"
 import { MSG_EXECUTE_CONTRACT_TYPE } from "../constants"
 import { useInvalidateAssetDefinitions } from "./useAssetDefinitions"
 import { useError } from "./useError"
@@ -10,10 +10,7 @@ interface CurrentMessage {
     description: string
 }
 const CURRENT_MESSAGE_KEY = ['current-message']
-export const useCurrentMessage = () => {
-    const queryClient = useQueryClient()
-    return queryClient.getQueryData<CurrentMessage>(CURRENT_MESSAGE_KEY)
-}
+export const useCurrentMessage = () => useQuery<CurrentMessage>(CURRENT_MESSAGE_KEY)
 
 /**
  * NOTE: sendMessage DOES ONCE AGAIN RETURN THE RESULT... LEAVING THIS HERE IN CASE THAT BREAKS AGAIN IN THE FUTURE

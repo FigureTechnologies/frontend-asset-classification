@@ -66,6 +66,7 @@ export const AssetVerifier: FunctionComponent<AssetVerifierProps> = ({ asset_typ
     const handleChange = (newVerifier: VerifierDetail) => {
         setUpdatedVerifier(newVerifier)
         setDirty(!deepEqual(verifier, newVerifier, { strict: true }))
+        onChange(newVerifier)
     }
 
     const updateVerifierField = (key: string, value: any) => {

@@ -72,7 +72,7 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         const newDefinition = deepReplace(updatedDefinition, key, value)
         setUpdatedDefinition(newDefinition)
         setIsNonVerifierDirty(calculateIsNonVerifierDirty(definition, newDefinition))
-        setDirty(!deepEqual(definition, updatedDefinition, { strict: true }))
+        setDirty(!deepEqual(definition, newDefinition, { strict: true }))
     }
 
     const sendMessageAndClearVerifier = async (tx: TransactionMeta) => {
@@ -82,12 +82,12 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
     }
 
     const handleUpdate = async () => {
-        const message = await service.getUpdateAssetDefinitionMessage(definition, walletConnectState.address)
+        const message = await service.getUpdateAssetDefinitionMessage(updatedDefinition, walletConnectState.address)
         await sendMessageAndClearVerifier(message)
     }
 
     const handleCreate = async () => {
-        const message = await service.getAddAssetDefinitionMessage(definition, bindName, walletConnectState.address)
+        const message = await service.getAddAssetDefinitionMessage(updatedDefinition, bindName, walletConnectState.address)
         await sendMessageAndClearVerifier(message)
     }
 
@@ -127,14 +127,14 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         </DefinitionDetails>
         <AssetVerifiers>
             <H4>Asset Verifiers {editable && <AddButton onClick={handleAdd} style={{float: 'right'}} title={`Add Asset Verifier for ${updatedDefinition.asset_type}`}/>}</H4>
-            {updatedDefinition.verifiers.length === 0 ? 'No Asset Verifiers' : updatedDefinition.verifiers.map(verifier => <AssetVerifier key={verifier.address}
+            {updatedDefinition.verifiers.length === 0 ? 'No Asset Verifiers' : updatedDefinition.verifiers.map((verifier, verifierIndex) => <AssetVerifier key={verifier.address}
                 asset_type={updatedDefinition.asset_type}
                 verifier={verifier}
                 editable={editable}
                 service={service}
                 newDefinition={creating}
                 definitionDirty={isNonVerifierDirty}
-                onChange={(verifier) => updateDefinitionField('verifiers', updatedDefinition.verifiers.map(v => v.address === verifier.address ? verifier : v))}
+                onChange={(verifier) => updateDefinitionField('verifiers', updatedDefinition.verifiers.map((v, i) => i === verifierIndex ? verifier : v))}
                 requestRemoval={() => requestVerifierRemoval(verifier)}
             />)}
         </AssetVerifiers>

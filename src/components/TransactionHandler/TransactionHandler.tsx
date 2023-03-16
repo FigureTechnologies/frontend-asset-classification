@@ -8,7 +8,7 @@ export interface TransactionHandlerProps {
 }
 
 export const TransactionHandler: FunctionComponent<TransactionHandlerProps> = () => {
-    const currentMessage = useCurrentMessage()
+    const { data: currentMessage } = useCurrentMessage()
 
     if (!currentMessage) {
         return <></>
