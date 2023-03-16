@@ -1,4 +1,4 @@
-import { useWalletConnect, WINDOW_MESSAGES } from "@provenanceio/walletconnect-js"
+import { useWalletConnect } from "@provenanceio/walletconnect-js"
 import deepcopy from "deepcopy"
 import { FunctionComponent, useState, useEffect } from "react"
 import styled from "styled-components"
@@ -11,8 +11,8 @@ import { InputOrDisplay } from "../Input"
 import { Modal } from "../Modal"
 import { AssetVerifier } from "./Verifier"
 import deepEqual from "deep-equal";
-import { useTransaction } from "../../hooks"
 import { deepReplace } from "../../utils"
+import { useSendACContractMessage, TransactionMeta } from "../../hooks/useWrapSendMessage"
 
 const DefinitionWrapper = styled.div<{ border: boolean }>`
     padding: 20px;
@@ -47,8 +47,8 @@ interface AssetDefinitionProps {
 }
 
 export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ definition, editable, creating = false, service }) => {
-    const { walletConnectService: wcs, walletConnectState } = useWalletConnect()
-    const [, setTransaction] = useTransaction()
+    const { walletConnectState } = useWalletConnect()
+    const { mutateAsync: sendMessage } = useSendACContractMessage()
 
     const [dirty, setDirty] = useState(false)
     const [isNonVerifierDirty, setIsNonVerifierDirty] = useState(false)
@@ -68,14 +68,6 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         setIsNonVerifierDirty(calculateIsNonVerifierDirty(definition, originalDef))
     }, [definition])
 
-    useEffect(() => {
-        const callback = () => {
-            setVerifierToAdd(null)
-        }
-        wcs.addListener(WINDOW_MESSAGES.CUSTOM_ACTION_COMPLETE, callback)
-        return () => wcs.removeListener(WINDOW_MESSAGES.CUSTOM_ACTION_COMPLETE, callback)
-    }, [wcs])
-
     const updateDefinitionField = (key: string, value: any) => {
         const newDefinition = deepReplace(updatedDefinition, key, value)
         setUpdatedDefinition(newDefinition)
@@ -83,19 +75,25 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         setDirty(!deepEqual(definition, updatedDefinition, { strict: true }))
     }
 
+    const sendMessageAndClearVerifier = async (tx: TransactionMeta) => {
+        await sendMessage({ tx }, {
+            onSuccess: () => setVerifierToAdd(null)
+        })
+    }
+
     const handleUpdate = async () => {
         const message = await service.getUpdateAssetDefinitionMessage(definition, walletConnectState.address)
-        setTransaction(message)
+        await sendMessageAndClearVerifier(message)
     }
 
     const handleCreate = async () => {
         const message = await service.getAddAssetDefinitionMessage(definition, bindName, walletConnectState.address)
-        setTransaction(message)
+        await sendMessageAndClearVerifier(message)
     }
 
     const handleDelete = async () => {
         const message = await service.getDeleteAssetDefinitionMessage(definition.asset_type, walletConnectState.address)
-        setTransaction(message)
+        await sendMessageAndClearVerifier(message)
     }
 
     const handleAdd = () => {
@@ -114,7 +112,7 @@ export const AssetDefinition: FunctionComponent<AssetDefinitionProps> = ({ defin
         const clonedDefinition = deepcopy(definition)
         clonedDefinition.verifiers = clonedDefinition.verifiers.filter(v => v.address !== verifier.address)
         const message = await service.getUpdateAssetDefinitionMessage(clonedDefinition, walletConnectState.address)
-        setTransaction(message)
+        await sendMessageAndClearVerifier(message)
         setVerifierToRemove(undefined)
         setUpdatedDefinition(clonedDefinition)
     }

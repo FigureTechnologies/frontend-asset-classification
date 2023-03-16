@@ -23,21 +23,23 @@ const MyQRCodeModal: React.FC<any> = QRCodeModal
 
 export const LoginManager: FunctionComponent<LoginManagerProps> = () => {
     const { walletConnectService: wcs, walletConnectState } = useWalletConnect()
+    const isConnected = walletConnectState.status === 'connected'
     
     return <>
         <Wrapper>
             <div>
-                {walletConnectState.connected ? `Connected as: ${walletConnectState.address}` : 'Connect as contract admin for edit functionality'}
+                {isConnected ? `Connected as: ${walletConnectState.address}` : 'Connect as contract admin for edit functionality'}
             </div>
-            <Button onClick={walletConnectState.connected ? wcs.disconnect : wcs.connect}>
-                {walletConnectState.connected ? 'Disconnect Wallet' : 'Connect Wallet'}
+            <Button onClick={() => isConnected ? wcs.disconnect() : wcs.connect()}>
+                {isConnected ? 'Disconnect Wallet' : 'Connect Wallet'}
             </Button>
         </Wrapper>
         <MyQRCodeModal
             walletConnectService={wcs}
             walletConnectState={walletConnectState}
             title="Scan to initiate walletConnect-js session"
-            devWallets={["figure_web", "provenance_extension"]}
+            devWallets={["figure_web", "figure_web_test"]}
+            hideWallets={["provenance_extension"]}
           />
     </>
 }

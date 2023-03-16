@@ -1,7 +1,7 @@
-import { QueryClient as WasmQueryClient } from "@provenanceio/wallet-lib/lib/proto/cosmwasm/wasm/v1/query_grpc_web_pb";
-import { QuerySmartContractStateRequest } from "@provenanceio/wallet-lib/lib/proto/cosmwasm/wasm/v1/query_pb";
-import { QueryClient as NameQueryClient } from "@provenanceio/wallet-lib/lib/proto/provenance/name/v1/query_grpc_web_pb";
-import { QueryResolveRequest } from "@provenanceio/wallet-lib/lib/proto/provenance/name/v1/query_pb";
+import { QueryClient as WasmQueryClient } from "@provenanceio/wallet-utils/lib/proto/cosmwasm/wasm/v1/query_grpc_web_pb";
+import { QuerySmartContractStateRequest } from "@provenanceio/wallet-utils/lib/proto/cosmwasm/wasm/v1/query_pb";
+import { QueryClient as NameQueryClient } from "@provenanceio/wallet-utils/lib/proto/provenance/name/v1/query_grpc_web_pb";
+import { QueryResolveRequest } from "@provenanceio/wallet-utils/lib/proto/provenance/name/v1/query_pb";
 import { PROD_GRPC_URL } from '../constants';
 
 export class WasmService {
