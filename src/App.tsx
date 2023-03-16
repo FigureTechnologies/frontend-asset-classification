@@ -6,26 +6,19 @@ import { LoginManager } from './components/Login';
 import { ContractConfig } from './components/ContractConfig';
 import { useEffect } from 'react';
 import { useWalletConnect, WalletConnectContextProvider } from '@provenanceio/walletconnect-js';
-import { WalletContextProvider } from '@provenanceio/wallet-lib';
-import { useSetNetwork, useNetworkConfig } from './hooks';
+import { useSetNetwork } from './hooks';
 import { NetworkSwitcher } from './components/NetworkSwitcher';
 import { TransactionHandler } from './components/TransactionHandler';
 import { ErrorPopup } from './components/Popup';
 
 function App() {
-  const networkConfig = useNetworkConfig()
-
-  return <WalletConnectContextProvider network={networkConfig.network}>
-      <WalletContextProvider 
-        grpcServiceAddress={networkConfig.grpcUrl}
-        walletUrl={networkConfig.walletUrl}>
+  return <WalletConnectContextProvider>
         <BrowserRouter basename='frontend-asset-classification'>
           <Routes>
             <Route path="/:network" element={<AppContent />} />
             <Route path="*" element={<Navigate to="/testnet" />} />
           </Routes>
         </BrowserRouter>
-      </WalletContextProvider>
     </WalletConnectContextProvider>
 }
 
@@ -35,7 +28,6 @@ function AppContent() {
   const setNetwork = useSetNetwork()
   const { walletConnectService: wcs } = useWalletConnect()
   useEffect(() => {
-    wcs.setNetwork(network || 'mainnet')
     setNetwork(network)
   }, [location, network, setNetwork, wcs])
 
