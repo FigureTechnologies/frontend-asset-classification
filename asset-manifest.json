@@ -5,11 +5,11 @@
     "main.js.map": "/frontend-asset-classification/static/js/main.01336905.chunk.js.map",
     "runtime-main.js": "/frontend-asset-classification/static/js/runtime-main.2eb4f806.js",
     "runtime-main.js.map": "/frontend-asset-classification/static/js/runtime-main.2eb4f806.js.map",
-    "static/js/2.36ce94df.chunk.js": "/frontend-asset-classification/static/js/2.36ce94df.chunk.js",
-    "static/js/2.36ce94df.chunk.js.map": "/frontend-asset-classification/static/js/2.36ce94df.chunk.js.map",
+    "static/js/2.f80075f9.chunk.js": "/frontend-asset-classification/static/js/2.f80075f9.chunk.js",
+    "static/js/2.f80075f9.chunk.js.map": "/frontend-asset-classification/static/js/2.f80075f9.chunk.js.map",
     "index.html": "/frontend-asset-classification/index.html",
     "static/css/main.a617e044.chunk.css.map": "/frontend-asset-classification/static/css/main.a617e044.chunk.css.map",
-    "static/js/2.36ce94df.chunk.js.LICENSE.txt": "/frontend-asset-classification/static/js/2.36ce94df.chunk.js.LICENSE.txt",
+    "static/js/2.f80075f9.chunk.js.LICENSE.txt": "/frontend-asset-classification/static/js/2.f80075f9.chunk.js.LICENSE.txt",
     "static/media/appStoreBadge.1edc73ee.svg": "/frontend-asset-classification/static/media/appStoreBadge.1edc73ee.svg",
     "static/media/figure.ee230eb1.svg": "/frontend-asset-classification/static/media/figure.ee230eb1.svg",
     "static/media/googlePlayBadge.e3d930c8.png": "/frontend-asset-classification/static/media/googlePlayBadge.e3d930c8.png",
@@ -17,7 +17,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.2eb4f806.js",
-    "static/js/2.36ce94df.chunk.js",
+    "static/js/2.f80075f9.chunk.js",
     "static/css/main.a617e044.chunk.css",
     "static/js/main.01336905.chunk.js"
   ]
