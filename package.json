@@ -6,7 +6,7 @@
   "dependencies": {
     "@provenanceio/wallet-utils": "2.8.0",
     "@provenanceio/walletconnect-js": "3.0.0-develop.7",
-    "@testing-library/jest-dom": "5.16.4",
+    "@testing-library/jest-dom": "5.17.0",
     "@testing-library/react": "12.1.4",
     "@testing-library/user-event": "13.5.0",
     "@types/jest": "27.5.1",
